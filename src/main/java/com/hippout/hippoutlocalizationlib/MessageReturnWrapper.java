@@ -1,5 +1,7 @@
 package com.hippout.hippoutlocalizationlib;
 
+import com.hippout.hippoutlocalizationlib.util.*;
+
 import javax.annotation.*;
 import java.util.*;
 
@@ -20,6 +22,9 @@ public class MessageReturnWrapper {
 
         if (this.locale.isEmpty())
             throw new IllegalArgumentException("Locale cannot be empty.");
+
+        if (HippOutLocalizationLib.getPlugin().getConfiguration().API_REGEX_LOCALE_TESTS)
+            ValidationUtil.validateLocale(this.locale, "Invalid Locale in MessageReturnWrapper: %s.");
 
         this.messageType = Objects.requireNonNull(messageType, "Message Type cannot be null.");
     }

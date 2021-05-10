@@ -41,7 +41,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
         this.configuration = new Configuration(this);
         this.languageHandler = new LanguageHandler(this, configuration.DEFAULT_LOCALE);
         this.playerLocaleCache = new PlayerLocaleCache(this);
-        this.eventListener = new EventListener(this, playerLocaleCache);
+        this.eventListener = new EventListener(this);
 
         getServer().getPluginManager().registerEvents(this.eventListener, this);
     }

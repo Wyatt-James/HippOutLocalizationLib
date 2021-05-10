@@ -18,6 +18,12 @@ public class PlayerLocaleCache {
     private final HippOutLocalizationLib plugin;
     private final Map<UUID, String> playerLocaleMap;
 
+    /**
+     * Constructs a Player Locale Cache with the given plugin.
+     *
+     * @param plugin The instance of HippOutLocalizationLib.
+     * @throws NullPointerException if plugin is null.
+     */
     PlayerLocaleCache(@Nonnull HippOutLocalizationLib plugin)
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
@@ -31,7 +37,7 @@ public class PlayerLocaleCache {
      * @return The Locale String of the given Player, or null if there is none.
      * @throws NullPointerException if UUID is null.
      * @throws NullPointerException if the UUID is not present. This will depend on the configuration
-     *                              debug.remove_disconnected_player_locales.
+     *                              config.yml/debug.remove_disconnected_player_locales.
      */
     @Nonnull
     public String getPlayerLocale(@Nonnull UUID id)
@@ -59,8 +65,7 @@ public class PlayerLocaleCache {
      * @param id     UUID to set the Locale of.
      * @param locale Locale to set the UUID to.
      * @throws NullPointerException  if UUID or Locale are null.
-     * @throws LocaleFormatException if INTERNAL_REGEX_LOCALE_TESTS are
-     *                               enabled and locale is not a valid format.
+     * @throws LocaleFormatException if INTERNAL_REGEX_LOCALE_TESTS are enabled and locale is not a valid format.
      */
     void setPlayerLocale(@Nonnull UUID id, @Nonnull String locale)
     {

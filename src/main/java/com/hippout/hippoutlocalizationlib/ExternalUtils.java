@@ -2,6 +2,7 @@ package com.hippout.hippoutlocalizationlib;
 
 import com.hippout.hippoutlocalizationlib.language.*;
 import org.bukkit.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.*;
 
 import javax.annotation.*;
@@ -16,172 +17,191 @@ import java.util.*;
 public class ExternalUtils {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
-    private static final String PLAYER_OFFLINE_EXCEPTION = "Player %s is not online.";
-    private static final String PLAYER_OFFLINE_WARN = "Player %s is not online. Skipping message send.";
-
     /**
      * Broadcasts a Localized Message to the given Collection of Players and the Console.
      *
-     * @param key        Message Key to send.
-     * @param players    Players to broadcast to.
+     * @param messageKey Message Key to send.
+     * @param recipients CommandSenders to broadcast to. Note that they may not have actually sent any Command.
      * @param formatArgs String Formatting arguments.
-     * @throws NullPointerException     if Key, Players, or formatArgs is null.
-     * @throws IllegalArgumentException if Players is empty.
+     * @throws NullPointerException     if MessageKey, Players, or formatArgs is null.
+     * @throws IllegalArgumentException if Recipients is empty.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Collection<? extends Player> players,
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
+                                                 @Nonnull Collection<CommandSender> recipients,
                                                  @Nonnull Object... formatArgs)
     {
-        Objects.requireNonNull(key, "Key cannot be null.");
-        Objects.requireNonNull(players, "Player Collection cannot be null.");
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
-        if (players.isEmpty()) throw new IllegalArgumentException("Player Collection cannot be empty.");
+        Objects.requireNonNull(recipients, "Recipients cannot be null.");
+        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
         final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
-        MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(key);
+        MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
         String consoleMessage = String.format(consoleMessageWrapper.getMessage(), formatArgs);
         messageMap.put(consoleMessageWrapper.getLocale(), consoleMessage);
 
         HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessage);
 
-        for (Player player : players) {
-            if (!player.isOnline()) {
-                HippOutLocalizationLib.getPlugin().getLogger().warning(String.format(PLAYER_OFFLINE_WARN, player));
-                continue;
-            }
-
-            String locale = playerLocaleCache.getPlayerLocale(player.getUniqueId());
+        for (CommandSender sender : recipients) {
+            final String locale = getLocale(sender);
 
             String message;
             if (messageMap.containsKey(locale))
                 message = messageMap.get(locale);
             else {
-                message = String.format(languageHandler.getLocalizedMessage(locale, key).getMessage(), formatArgs);
+                message = String.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs);
                 messageMap.put(locale, message);
             }
 
-            player.sendMessage(message);
+            sender.sendMessage(message);
         }
     }
 
     /**
      * Broadcasts a Localized Message to all currently online Players and the Console.
      *
-     * @param key        Message Key to send.
+     * @param messageKey Message Key to send.
      * @param formatArgs String Formatting arguments.
-     * @throws NullPointerException if Key or formatArgs is null.
+     * @throws NullPointerException if MessageKey or formatArgs is null.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
+     * @apiNote Ends silently if no Players are online.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Object... formatArgs)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
     {
-        broadcastLocalizedMessage(key, Bukkit.getOnlinePlayers(), formatArgs);
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        if (onlinePlayers.size() > 0)
+            broadcastLocalizedMessage(messageKey, onlinePlayers, formatArgs);
     }
 
     /**
      * Broadcasts a Localized Message to the given Collection of Players and the Console.
      *
-     * @param key     Message Key to send.
-     * @param players Players to broadcast to.
-     * @throws NullPointerException     if Key or Players is null.
-     * @throws IllegalArgumentException if Players is empty.
+     * @param messageKey Message Key to send.
+     * @param recipients CommandSenders to broadcast to. Note that they may not have actually sent the Command.
+     * @throws NullPointerException     if MessageKey or Players is null.
+     * @throws IllegalArgumentException if Recipients is empty.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Collection<? extends Player> players)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
+                                                 @Nonnull Collection<CommandSender> recipients)
     {
-        Objects.requireNonNull(key, "Key cannot be null.");
-        Objects.requireNonNull(players, "Player Collection cannot be null.");
-        if (players.isEmpty()) throw new IllegalArgumentException("Player Collection cannot be empty.");
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(recipients, "Recipients cannot be null.");
+        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
         final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
-        MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(key);
+        MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
         messageMap.put(consoleMessageWrapper.getLocale(), consoleMessageWrapper.getMessage());
 
         HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessageWrapper.getMessage());
 
-        for (Player player : players) {
-            if (!player.isOnline()) {
-                HippOutLocalizationLib.getPlugin().getLogger().warning(String.format(PLAYER_OFFLINE_WARN, player));
-                continue;
-            }
-
-            String locale = playerLocaleCache.getPlayerLocale(player.getUniqueId());
+        for (CommandSender sender : recipients) {
+            final String locale = getLocale(sender);
 
             String message;
             if (messageMap.containsKey(locale))
                 message = messageMap.get(locale);
             else {
-                message = languageHandler.getLocalizedMessage(locale, key).getMessage();
+                message = languageHandler.getLocalizedMessage(locale, messageKey).getMessage();
                 messageMap.put(locale, message);
             }
 
-            player.sendMessage(message);
+            sender.sendMessage(message);
         }
     }
 
     /**
      * Broadcasts a Localized Message to all currently online Players and the Console.
      *
-     * @param key Message Key to send.
-     * @throws NullPointerException     if Key or Players is null.
-     * @throws IllegalArgumentException if Players is empty.
+     * @param messageKey Message Key to send.
+     * @throws NullPointerException if MessageKey is null.
+     * @apiNote Ends silently if no Players are online.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey)
     {
-        broadcastLocalizedMessage(key, Bukkit.getOnlinePlayers());
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        if (onlinePlayers.size() > 0)
+            broadcastLocalizedMessage(messageKey, onlinePlayers);
     }
 
     /**
      * Sends a localized Message to a given Player.
      *
-     * @param key        Message Key to send.
-     * @param player     Player to send the Message to.
-     * @param formatArgs String formatting arguments.
-     * @throws NullPointerException  if Key, Player, or formatArgs is null.
+     * @param messageKey    Message Key to send.
+     * @param commandSender CommandSender to send the Message to.
+     * @param formatArgs    String formatting arguments.
+     * @throws NullPointerException  if MessageKey, commandSender, or formatArgs is null.
      * @throws IllegalStateException if Player is offline.
      */
-    public static void sendLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Player player, @Nonnull Object[] formatArgs)
+    public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
+                                            @Nonnull Object[] formatArgs)
     {
-        Objects.requireNonNull(key, "Key cannot be null.");
-        Objects.requireNonNull(player, "Player cannot be null.");
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
 
-        if (!player.isOnline())
-            throw new IllegalStateException(String.format(PLAYER_OFFLINE_EXCEPTION, player));
-
+        final String locale = getLocale(commandSender);
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
-        player.sendMessage(String.format(languageHandler.getLocalizedMessage(
-                playerLocaleCache.getPlayerLocale(player.getUniqueId()), key).getMessage(), formatArgs));
+        commandSender.sendMessage(String.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs));
     }
 
     /**
      * Sends a localized Message to a given Player.
      *
-     * @param key    Message Key to send.
-     * @param player Player to send the Message to.
-     * @throws NullPointerException  if Key or Player is null.
+     * @param messageKey    Message Key to send.
+     * @param commandSender CommandSender to send the Message to.
+     * @throws NullPointerException  if MessageKey or commandSender is null.
      * @throws IllegalStateException if Player is offline.
      */
-    public static void sendLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Player player)
+    public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
-        Objects.requireNonNull(key, "Key cannot be null.");
-        Objects.requireNonNull(player, "Player cannot be null.");
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
 
-        if (!player.isOnline())
-            throw new IllegalStateException(String.format(PLAYER_OFFLINE_EXCEPTION, player));
-
+        final String locale = getLocale(commandSender);
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
-        player.sendMessage(languageHandler.getLocalizedMessage(
-                playerLocaleCache.getPlayerLocale(player.getUniqueId()), key).getMessage());
+        commandSender.sendMessage(languageHandler.getLocalizedMessage(locale, messageKey).getMessage());
+    }
+
+    /**
+     * Fetches the Locale of the given CommandSender. For ProxiedCommandSenders, recursively fetches caller.
+     *
+     * @param commandSender CommandSender to get the Locale of.
+     * @return The Locale. May be a default.
+     * @throws NullPointerException if commandSender is null.
+     * @throws NullPointerException if commandSender is of type org.bukkit.Player and their UUID is not present in the
+     *                              PlayerLocaleCache.
+     */
+    public static String getLocale(@Nonnull CommandSender commandSender)
+    {
+        Objects.requireNonNull(commandSender, "Command sender cannot be null.");
+
+        HippOutLocalizationLib plugin = HippOutLocalizationLib.getPlugin();
+        String locale;
+
+        if (commandSender instanceof Player)
+            locale = plugin.getPlayerLocaleCache().getPlayerLocale(((Player) commandSender).getUniqueId());
+
+        else if (commandSender instanceof ConsoleCommandSender)
+            locale = plugin.getConfiguration().CONSOLE_LOCALE;
+
+        else if (commandSender instanceof RemoteConsoleCommandSender)
+            locale = plugin.getConfiguration().REMOTE_CONSOLE_LOCALE;
+
+        else if (commandSender instanceof ProxiedCommandSender)
+            return getLocale(((ProxiedCommandSender) commandSender).getCaller());
+
+        else
+            locale = plugin.getConfiguration().DEFAULT_LOCALE;
+
+        return locale;
     }
 }

@@ -7,6 +7,10 @@ default_locale: "en_us"
 # This is a good option for a Spanish-speaking host running an English server, for example.
 console_locale: "en_us"
 
+# Default locale for the remote console. Will still use default_locale as a fallback if console_locale is lacking any
+# messages. This is a good option for a Spanish-speaking host running an English server, for example.
+remote_console_locale: "en_us"
+
 # Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
 failsafe_message: "The requested message could not be loaded."
 

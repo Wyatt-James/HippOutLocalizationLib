@@ -37,7 +37,7 @@ public class Configuration {
     // --------------- Instance Variables ---------------
     public final String CONFIG_VERSION;
     public final String FAILSAFE_MESSAGE;
-    public final String DEFAULT_LOCALE, CONSOLE_LOCALE;
+    public final String DEFAULT_LOCALE, CONSOLE_LOCALE, REMOTE_CONSOLE_LOCALE;
     // Whether or not the API layer should check Locales against the regex. Generally on for development and off for
     // deployment.
     public final boolean API_REGEX_LOCALE_TESTS;
@@ -46,9 +46,17 @@ public class Configuration {
     public final boolean REMOVE_DISCONNECTED_PLAYER_LOCALES;
     private final HippOutLocalizationLib plugin;
 
-    public Configuration(HippOutLocalizationLib plugin)
+    /**
+     * Constructs a Configuration and loads from config.yml.
+     *
+     * @param plugin HippOutLocalizationLib instance.
+     * @throws NullPointerException  if plugin is null.
+     * @throws IllegalStateException if config_version is in an invalid format.
+     * @throws LocaleFormatException if any of the Locales in config.yml have an invalid format.
+     */
+    public Configuration(@Nonnull HippOutLocalizationLib plugin)
     {
-        this.plugin = plugin;
+        this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
 
         final FileConfiguration rootConfig = this.plugin.getConfig();
         final ConfigurationSection debugConfig = rootConfig.getConfigurationSection("debug");
@@ -59,17 +67,18 @@ public class Configuration {
             throw new IllegalStateException(ERR_CONFIG_INVALID_FORMAT);
 
         // Load failsafe_message
-        String failMessage = rootConfig.getString("failsafe_message");
-        if (failMessage == null) {
-            failMessage = "The requested message could not be loaded.";
+        String failsafeMessage = rootConfig.getString("failsafe_message");
+        if (failsafeMessage == null) {
+            failsafeMessage = "The requested message could not be loaded.";
             plugin.getLogger().log(Level.WARNING, ERR_FAILSAFE_MESSAGE_NOT_FOUND);
         }
 
-        FAILSAFE_MESSAGE = failMessage;
+        FAILSAFE_MESSAGE = failsafeMessage;
 
         // Load default and console Locales
         DEFAULT_LOCALE = loadLocale(rootConfig, "default_locale");
         CONSOLE_LOCALE = loadLocale(rootConfig, "console_locale");
+        REMOTE_CONSOLE_LOCALE = loadLocale(rootConfig, "remote_console_locale");
 
         API_REGEX_LOCALE_TESTS = debugConfig.getBoolean("api_regex_locale_tests", false);
         INTERNAL_REGEX_LOCALE_TESTS = debugConfig.getBoolean("internal_regex_locale_tests", false);

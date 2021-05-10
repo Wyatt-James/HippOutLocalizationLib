@@ -23,12 +23,12 @@ public class Language {
     private final Map<NamespacedKey, String> messageMap;
 
     /**
-     * Creates a Language with the given language code.
+     * Creates a Language with the given Locale.
      *
-     * @param locale ISO-639 Language Code as described in
-     *               <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html>Oracle's Documentation</a>
-     *               including the "variant" extension. Must be entirely lowercase, with an underscore separator.
-     * @throws NullPointerException is thrown if locale is null.
+     * @param locale ISO-639 Locale as described in
+     *               <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html>Oracle's Documentation</a>.
+     *               Must abide by the regex stored in util.ValidationUtil.
+     * @throws NullPointerException if locale is null.
      * @apiNote The LanguageHandler should either convert incoming codes to lowercase-only or throw an exception,
      * meaning that the Pattern test should never fail for case sensitivity.
      */
@@ -42,55 +42,55 @@ public class Language {
     /**
      * Adds a String message to this Language.
      *
-     * @param key Key to remove message of
-     * @throws NullPointerException     is thrown if key is null.
-     * @throws NullPointerException     is thrown if message is null.
-     * @throws IllegalArgumentException is thrown if given key was already present in this Language..
+     * @param messageKey Key to remove message of
+     * @throws NullPointerException     if messageKey is null.
+     * @throws NullPointerException     if message is null.
+     * @throws IllegalArgumentException if given messageKey was already present in this Language.
      */
-    void addMessage(@Nonnull NamespacedKey key, @Nonnull String message)
+    void addMessage(@Nonnull NamespacedKey messageKey, @Nonnull String message)
     {
-        Objects.requireNonNull(key, "Key cannot be null. Lang: " + locale);
+        Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
         Objects.requireNonNull(message, "Message cannot be null. Lang: " + locale);
 
-        if (messageMap.containsKey(key))
-            throw new IllegalArgumentException(String.format(ERROR_ADD_ALREADY_CONTAINS, locale, key));
+        if (messageMap.containsKey(messageKey))
+            throw new IllegalArgumentException(String.format(ERROR_ADD_ALREADY_CONTAINS, locale, messageKey));
 
-        messageMap.put(key, message);
+        messageMap.put(messageKey, message);
     }
 
     /**
      * Removes a String message from this Language.
      *
-     * @param key Key to remove message of
-     * @throws NullPointerException     is thrown if key is null.
-     * @throws IllegalArgumentException is thrown if the message could not be found.
+     * @param messageKey Key to remove message of
+     * @throws NullPointerException     if messageKey is null.
+     * @throws IllegalArgumentException if the message could not be found.
      */
-    void removeMessage(@Nonnull NamespacedKey key)
+    void removeMessage(@Nonnull NamespacedKey messageKey)
     {
-        Objects.requireNonNull(key, "Key cannot be null. Lang: " + locale);
+        Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
 
-        // If removed, message was either null (illegal) or key was not present.
-        if (messageMap.remove(key) == null)
-            throw new IllegalArgumentException(String.format(ERROR_REMOVE_NOT_FOUND, locale, key));
+        // If removed, message was either null (illegal) or messageKey was not present.
+        if (messageMap.remove(messageKey) == null)
+            throw new IllegalArgumentException(String.format(ERROR_REMOVE_NOT_FOUND, locale, messageKey));
     }
 
     /**
      * Fetches a String message from this Language.
      *
-     * @param key Key to fetch message of
+     * @param messageKey Key to fetch message of
      * @return The requested message
-     * @throws NullPointerException     is thrown if key is null.
-     * @throws IllegalArgumentException is thrown if the message could not be found.
+     * @throws NullPointerException     if messageKey is null.
+     * @throws IllegalArgumentException if the message could not be found.
      */
     @Nonnull
-    String getMessage(@Nonnull NamespacedKey key)
+    String getMessage(@Nonnull NamespacedKey messageKey)
     {
-        Objects.requireNonNull(key, "Key cannot be null. Lang: " + locale);
+        Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
 
-        String out = messageMap.get(key);
+        String out = messageMap.get(messageKey);
 
         if (out == null)
-            throw new IllegalArgumentException(String.format(ERROR_GET_MESSAGE_NOT_FOUND, locale, key));
+            throw new IllegalArgumentException(String.format(ERROR_GET_MESSAGE_NOT_FOUND, locale, messageKey));
 
         return out;
     }
@@ -99,14 +99,14 @@ public class Language {
     /**
      * Returns whether this Language contains a message with the given NamespacedKey.
      *
-     * @param key Key to fetch message of
-     * @throws NullPointerException is thrown if key is null.
+     * @param messageKey Key to check.
+     * @throws NullPointerException if messageKey is null.
      */
-    boolean containsMessage(@Nonnull NamespacedKey key)
+    boolean containsMessage(@Nonnull NamespacedKey messageKey)
     {
-        Objects.requireNonNull(key, "Key cannot be null.");
+        Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
 
-        return messageMap.containsKey(key);
+        return messageMap.containsKey(messageKey);
     }
 
     /**

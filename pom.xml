@@ -73,9 +73,9 @@
                 <configuration>
                     <excludes>
                     </excludes>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerVersion>1.8</compilerVersion>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <compilerVersion>${maven.compiler.target}</compilerVersion>
                 </configuration>
             </plugin>
             <plugin>

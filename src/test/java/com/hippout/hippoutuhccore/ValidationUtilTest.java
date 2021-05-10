@@ -2,8 +2,7 @@ package com.hippout.hippoutuhccore;
 
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
-import org.junit.Test;
-import org.junit.jupiter.api.*;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
@@ -115,7 +114,6 @@ public class ValidationUtilTest {
     };
 
     @Test
-    @DisplayName("Verify All Locale Codes")
     public void verifyLocaleCodes()
     {
         boolean allGood = true;
@@ -143,7 +141,6 @@ public class ValidationUtilTest {
     }
 
     @Test
-    @DisplayName("Verify Null Conditions")
     public void verifyNull()
     {
         ValidationUtil.validateLocale("en_us");

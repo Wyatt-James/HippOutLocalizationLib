@@ -1,0 +1,7 @@
+name: ${project.name}
+main: com.hippout.hippoutlocalizationlib.${project.name}
+version: ${project.version}
+api-version: 1.16
+website: ${project.url}
+author: Wyatt_James
+depend: [ ]

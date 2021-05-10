@@ -1,0 +1,21 @@
+config_version: "0.0.1"
+
+# Default fall-back locale for things such as Players.
+default_locale: "en_us"
+
+# Default locale for the console. Will still use default_locale as a fallback if console_locale is lacking any messages.
+# This is a good option for a Spanish-speaking host running an English server, for example.
+console_locale: "en_us"
+
+# Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
+failsafe_message: "The requested message could not be loaded."
+
+debug:
+  # Whether or not to test Locales against regex for API calls. Leave disabled for deployed builds but enabled for dev.
+  api_regex_locale_tests: false
+
+  # Whether or not to test Locales against regex for internal calls. Leave disabled for release.
+  internal_regex_locale_tests: false
+
+  # Whether or not to remove disconnected Players' Locales. Leave enabled for release.
+  remove_disconnected_player_locales: true

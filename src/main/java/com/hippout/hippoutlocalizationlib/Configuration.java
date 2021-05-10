@@ -1,5 +1,6 @@
 package com.hippout.hippoutlocalizationlib;
 
+import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.configuration.*;
 import org.bukkit.configuration.file.*;
@@ -11,6 +12,8 @@ import java.util.regex.*;
 
 /**
  * A Configuration class for HippOutLocalizationLib
+ *
+ * @author Wyatt Kalmer
  */
 public class Configuration {
     private static final String VERSION_REGEX = "^[0-9]{1}.[0-9]{1}.[0-9]{1}$";
@@ -79,8 +82,8 @@ public class Configuration {
      * @param configurationSection FileConfiguration containing the Locale String in its top level.
      * @param varName              Locale Variable Name in the FileConfiguration.
      * @return The verified Locale.
-     * @throws NullPointerException     is thrown if the requested variable could not be found.
-     * @throws IllegalArgumentException is thrown if the requested variable was not a valid Locale.
+     * @throws NullPointerException  if the requested variable could not be found.
+     * @throws LocaleFormatException if the requested variable was not a valid Locale
      */
     @Nonnull
     private static String loadLocale(ConfigurationSection configurationSection, String varName)

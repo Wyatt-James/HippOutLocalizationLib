@@ -29,7 +29,6 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
     {
-        String locale = event.getLocale();
         playerLocaleCache.setPlayerLocale(event.getPlayer().getUniqueId(), event.getLocale());
         plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_CHANGED, event.getPlayer().getName(), event.getLocale()));
     }

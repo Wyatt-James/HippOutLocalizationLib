@@ -16,20 +16,25 @@ import java.util.*;
 public class ExternalUtils {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
+    private static final String PLAYER_OFFLINE_EXCEPTION = "Player %s is not online.";
+    private static final String PLAYER_OFFLINE_WARN = "Player %s is not online. Skipping message send.";
+
     /**
      * Broadcasts a Localized Message to the given Collection of Players and the Console.
      *
      * @param key        Message Key to send.
      * @param players    Players to broadcast to.
      * @param formatArgs String Formatting arguments.
-     * @throws NullPointerException     if Key or Players is null.
+     * @throws NullPointerException     if Key, Players, or formatArgs is null.
      * @throws IllegalArgumentException if Players is empty.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Collection<? extends Player> players, Object... formatArgs)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Collection<? extends Player> players,
+                                                 @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(key, "Key cannot be null.");
         Objects.requireNonNull(players, "Player Collection cannot be null.");
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
         if (players.isEmpty()) throw new IllegalArgumentException("Player Collection cannot be empty.");
 
         final Map<String, String> messageMap = new HashMap<>();
@@ -44,6 +49,11 @@ public class ExternalUtils {
         HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessage);
 
         for (Player player : players) {
+            if (!player.isOnline()) {
+                HippOutLocalizationLib.getPlugin().getLogger().warning(String.format(PLAYER_OFFLINE_WARN, player));
+                continue;
+            }
+
             String locale = playerLocaleCache.getPlayerLocale(player.getUniqueId());
 
             String message;
@@ -63,10 +73,10 @@ public class ExternalUtils {
      *
      * @param key        Message Key to send.
      * @param formatArgs String Formatting arguments.
-     * @throws NullPointerException if Key is null.
+     * @throws NullPointerException if Key or formatArgs is null.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, Object... formatArgs)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Object... formatArgs)
     {
         broadcastLocalizedMessage(key, Bukkit.getOnlinePlayers(), formatArgs);
     }
@@ -96,6 +106,11 @@ public class ExternalUtils {
         HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessageWrapper.getMessage());
 
         for (Player player : players) {
+            if (!player.isOnline()) {
+                HippOutLocalizationLib.getPlugin().getLogger().warning(String.format(PLAYER_OFFLINE_WARN, player));
+                continue;
+            }
+
             String locale = playerLocaleCache.getPlayerLocale(player.getUniqueId());
 
             String message;
@@ -128,12 +143,17 @@ public class ExternalUtils {
      * @param key        Message Key to send.
      * @param player     Player to send the Message to.
      * @param formatArgs String formatting arguments.
-     * @throws NullPointerException if Key or Player is null.
+     * @throws NullPointerException  if Key, Player, or formatArgs is null.
+     * @throws IllegalStateException if Player is offline.
      */
-    public static void sendLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Player player, Object[] formatArgs)
+    public static void sendLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Player player, @Nonnull Object[] formatArgs)
     {
         Objects.requireNonNull(key, "Key cannot be null.");
         Objects.requireNonNull(player, "Player cannot be null.");
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+
+        if (!player.isOnline())
+            throw new IllegalStateException(String.format(PLAYER_OFFLINE_EXCEPTION, player));
 
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
         final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
@@ -147,12 +167,16 @@ public class ExternalUtils {
      *
      * @param key    Message Key to send.
      * @param player Player to send the Message to.
-     * @throws NullPointerException if Key or Player is null.
+     * @throws NullPointerException  if Key or Player is null.
+     * @throws IllegalStateException if Player is offline.
      */
     public static void sendLocalizedMessage(@Nonnull NamespacedKey key, @Nonnull Player player)
     {
         Objects.requireNonNull(key, "Key cannot be null.");
         Objects.requireNonNull(player, "Player cannot be null.");
+
+        if (!player.isOnline())
+            throw new IllegalStateException(String.format(PLAYER_OFFLINE_EXCEPTION, player));
 
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
         final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();

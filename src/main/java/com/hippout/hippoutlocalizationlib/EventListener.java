@@ -40,9 +40,9 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)
     {
-        if (plugin.getConfiguration().REMOVE_DISCONNECTED_PLAYER_LOCALES)
+        if (plugin.getConfiguration().REMOVE_DISCONNECTED_PLAYER_LOCALES) {
             playerLocaleCache.removePlayerLocale(event.getPlayer().getUniqueId());
-
-        plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_REMOVED, event.getPlayer().getName()));
+            plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_REMOVED, event.getPlayer().getName()));
+        }
     }
 }

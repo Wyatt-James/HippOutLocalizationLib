@@ -42,6 +42,18 @@ public class PlayerLocaleCache {
     }
 
     /**
+     * Returns whether this PlayerLocaleCache contains information for the given UUID.
+     *
+     * @param id UUID to check
+     * @throws NullPointerException if UUID is null.
+     */
+    public boolean isLocaleCached(@Nonnull UUID id)
+    {
+        Objects.requireNonNull(id, "UUID cannot be null.");
+        return playerLocaleMap.containsKey(id);
+    }
+
+    /**
      * Sets the Locale for a given UUID.
      *
      * @param id     UUID to set the Locale of.
@@ -73,17 +85,5 @@ public class PlayerLocaleCache {
             throw new IllegalStateException("Tried to remove UUID that was not present: " + id);
 
         playerLocaleMap.remove(id);
-    }
-
-    /**
-     * Returns whether this PlayerLocaleCache contains information for the given UUID.
-     *
-     * @param id UUID to check
-     * @throws NullPointerException if UUID is null.
-     */
-    boolean isLocaleCached(@Nonnull UUID id)
-    {
-        Objects.requireNonNull(id, "UUID cannot be null.");
-        return playerLocaleMap.containsKey(id);
     }
 }

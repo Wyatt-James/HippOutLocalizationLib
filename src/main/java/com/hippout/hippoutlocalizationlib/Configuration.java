@@ -16,7 +16,7 @@ import java.util.regex.*;
  * @author Wyatt Kalmer
  */
 public class Configuration {
-    private static final String VERSION_REGEX = "^[0-9]{1}.[0-9]{1}.[0-9]{1}$";
+    private static final String VERSION_REGEX = "^[0-9].[0-9].[0-9]$";
     private static final Pattern VERSION_PATTERN = Pattern.compile(VERSION_REGEX);
 
 

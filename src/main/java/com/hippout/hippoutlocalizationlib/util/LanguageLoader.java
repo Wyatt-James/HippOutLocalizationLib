@@ -5,9 +5,11 @@ import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.language.*;
 import org.bukkit.*;
 import org.bukkit.configuration.*;
+import org.bukkit.configuration.file.*;
 import org.bukkit.plugin.java.*;
 
 import javax.annotation.*;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -18,15 +20,22 @@ import java.util.*;
 public class LanguageLoader {
     private final JavaPlugin plugin;
 
+    private final String languageDirectoryName;
+
     /**
      * Constructs a LanguageLoader with the given JavaPlugin.
      *
-     * @param plugin Parent JavaPlugin of this LanguageLoader.
-     * @throws NullPointerException if plugin is null.
+     * @param plugin                Parent JavaPlugin of this LanguageLoader.
+     * @param languageDirectoryName Directory to load language resources from.
+     * @throws NullPointerException if plugin or languageDirectoryName is null.
+     * @apiNote if languageDirectoryName is empty, will load from main data folder directory. This is discouraged
+     * however.
      */
-    public LanguageLoader(@Nonnull JavaPlugin plugin)
+    public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName)
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
+        this.languageDirectoryName = Objects.requireNonNull(languageDirectoryName, "Language Directory Name" +
+                " cannot be null.");
     }
 
     /**
@@ -78,5 +87,35 @@ public class LanguageLoader {
         }
 
         return messageKeys;
+    }
+
+    /**
+     * Loads the requested file from the plugin's specified language directory into the plugin's FileConfiguration.
+     *
+     * @param fileName Language file to load
+     * @return The Plugin's FileConfiguration object. See API Note tag, as this works somewhat differently to how it
+     * seems.
+     * @throws NullPointerException     if config or fileName are null.
+     * @throws IllegalArgumentException if fileName is empty.
+     * @apiNote The plugin's FileConfiguration is effectively overwritten so be sure to reload the default
+     * configuration after loading languages if you need it! The return is just for convenience.
+     */
+    public FileConfiguration loadLanguageConfig(@Nonnull String fileName) throws IOException, InvalidConfigurationException
+    {
+        Objects.requireNonNull(fileName, "Language Name cannot be null.");
+        if (fileName.isEmpty()) throw new IllegalArgumentException("File Name cannot be empty.");
+
+        final FileConfiguration config = plugin.getConfig();
+        final String dataFolderPath = plugin.getDataFolder().getPath();
+        final String languageFilePath;
+
+        if (languageDirectoryName.isEmpty())
+            languageFilePath = dataFolderPath + File.separator + fileName;
+        else
+            languageFilePath = dataFolderPath + File.separator + languageDirectoryName + File.separator + fileName;
+
+        config.load(languageFilePath);
+
+        return config;
     }
 }

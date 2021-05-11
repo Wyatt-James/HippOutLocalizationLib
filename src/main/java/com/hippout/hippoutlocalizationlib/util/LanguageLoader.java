@@ -95,10 +95,13 @@ public class LanguageLoader {
      * @param fileName Language file to load
      * @return The Plugin's FileConfiguration object. See API Note tag, as this works somewhat differently to how it
      * seems.
-     * @throws NullPointerException     if config or fileName are null.
-     * @throws IllegalArgumentException if fileName is empty.
-     * @apiNote The plugin's FileConfiguration is effectively overwritten so be sure to reload the default
-     * configuration after loading languages if you need it! The return is just for convenience.
+     * @throws NullPointerException          if config or fileName are null.
+     * @throws IllegalArgumentException      if fileName is empty.
+     * @throws IOException                   if config.load fails to load the requested file.
+     * @throws InvalidConfigurationException if config.load can load the requested file but it is not a valid YAML file.
+     * @apiNote Bukkit only stores one FileConfiguration object per plugin, so loading a language file with this method
+     * will overwrite the previous loaded FileConfiguration. The return is only for convenience and should not imply
+     * any separation.
      */
     public FileConfiguration loadLanguageConfig(@Nonnull String fileName) throws IOException, InvalidConfigurationException
     {

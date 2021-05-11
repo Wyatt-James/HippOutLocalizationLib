@@ -28,8 +28,8 @@ public class ExternalUtils {
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      */
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
-                                                 @Nonnull Collection<CommandSender> recipients,
-                                                 @Nonnull Object... formatArgs)
+                                                 @Nonnull Collection<? extends CommandSender> recipients,
+                                                 @Nonnull Object[] formatArgs)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
@@ -71,7 +71,7 @@ public class ExternalUtils {
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      * @apiNote Ends silently if no Players are online.
      */
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object[] formatArgs)
     {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         if (onlinePlayers.size() > 0)
@@ -87,7 +87,7 @@ public class ExternalUtils {
      * @throws IllegalArgumentException if Recipients is empty.
      */
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
-                                                 @Nonnull Collection<CommandSender> recipients)
+                                                 @Nonnull Collection<? extends CommandSender> recipients)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(recipients, "Recipients cannot be null.");

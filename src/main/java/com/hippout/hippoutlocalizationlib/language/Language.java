@@ -21,6 +21,7 @@ public class Language {
     private final String locale;
 
     private final Map<NamespacedKey, String> messageMap;
+    private final List<NamespacedKey> keys;
 
     /**
      * Creates a Language with the given Locale.
@@ -37,6 +38,7 @@ public class Language {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
         this.locale = ValidationUtil.validateLocale(locale);
         this.messageMap = new HashMap<>();
+        this.keys = new ArrayList<>();
     }
 
     /**
@@ -56,6 +58,7 @@ public class Language {
             throw new IllegalArgumentException(String.format(ERROR_ADD_ALREADY_CONTAINS, locale, messageKey));
 
         messageMap.put(messageKey, message);
+        keys.add(messageKey);
     }
 
     /**
@@ -72,6 +75,8 @@ public class Language {
         // If removed, message was either null (illegal) or messageKey was not present.
         if (messageMap.remove(messageKey) == null)
             throw new IllegalArgumentException(String.format(ERROR_REMOVE_NOT_FOUND, locale, messageKey));
+        else
+            keys.remove(messageKey);
     }
 
     /**
@@ -95,7 +100,6 @@ public class Language {
         return out;
     }
 
-
     /**
      * Returns whether this Language contains a message with the given NamespacedKey.
      *
@@ -106,7 +110,30 @@ public class Language {
     {
         Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
 
-        return messageMap.containsKey(messageKey);
+        return keys.contains(messageKey);
+    }
+
+    /**
+     * Fetches a NamespacedKey if it is contained within this Language.
+     *
+     * @param key Key of a NamespacedKey to fetch.
+     * @return The requested NamespacedKey, or null if it did not exist.
+     * @throws NullPointerException     if Key is null.
+     * @throws IllegalArgumentException if Key is empty.
+     * @apiNote For internal use only.
+     */
+    @Nullable
+    NamespacedKey getMessageKey(@Nonnull String key)
+    {
+        Objects.requireNonNull(key, "Key cannot be null.");
+        if (key.isEmpty()) throw new IllegalArgumentException("Key cannot be empty.");
+
+        for (NamespacedKey messageKey : keys) {
+            if (messageKey.getKey().equals(key))
+                return messageKey;
+        }
+
+        return null;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.hippout.hippoutlocalizationlib.MessageReturnWrapper.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
+import org.bukkit.plugin.java.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -18,6 +19,7 @@ public class LanguageHandler {
     private final HippOutLocalizationLib plugin;
 
     private final Map<String, Language> languageMap;
+    private final List<NamespacedKey> keys;
     private final Language defaultLanguage; // Cache
 
     /**
@@ -39,6 +41,7 @@ public class LanguageHandler {
 
         this.plugin = plugin;
         languageMap = new HashMap<>();
+        keys = new ArrayList<>();
         defaultLanguage = new Language(plugin, defaultLocale);
         languageMap.put(defaultLocale, defaultLanguage);
     }
@@ -186,11 +189,44 @@ public class LanguageHandler {
                 languageMap.put(locale, language);
             }
 
-            if (language.containsMessage(messageKey))
+            if (language.containsMessage(messageKey)) {
                 plugin.getLogger().warning(String.format("Language %s already contains message %s. The original" +
                         " message will be kept.", locale, messageKey));
-            else
+            } else {
                 language.addMessage(messageKey, message);
+                keys.add(messageKey);
+            }
         }
+    }
+
+    /**
+     * Returns a NamespacedKey with the given plugin namespace and key. If this NamespacedKey is already registered,
+     * returns the existing instance, else creates a new NamespacedKey.
+     *
+     * @param plugin Plugin of the NamespacedKey to fetch.
+     * @param key    Key to search for.
+     * @return The found or created NamespacedKey.
+     * @throws NullPointerException     if Plugin or Key is empty.
+     * @throws IllegalArgumentException if Key is empty.
+     */
+    @Nonnull
+    public NamespacedKey getKey(@Nonnull JavaPlugin plugin, @Nonnull String key)
+    {
+        Objects.requireNonNull(plugin, "Plugin cannot be null.");
+        Objects.requireNonNull(key, "Key cannot be null.");
+        if (key.isEmpty()) throw new IllegalArgumentException("Key cannot be empty.");
+
+        final String pluginKeyName = plugin.getName().toLowerCase();
+        final String keyLowerCase = key.toLowerCase();
+
+        if (!keyLowerCase.equals(key)) plugin.getLogger().warning("Uppercase keys are automatically converted to " +
+                "lowercase by Bukkit. Yours: " + key);
+
+        for (NamespacedKey messageKey : keys) {
+            if (messageKey.getKey().equals(keyLowerCase) && messageKey.getNamespace().equals(pluginKeyName))
+                return messageKey;
+        }
+
+        return new NamespacedKey(plugin, keyLowerCase);
     }
 }

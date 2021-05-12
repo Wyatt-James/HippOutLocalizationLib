@@ -14,5 +14,7 @@ contributing to the repository.
 - Don't use braces when they aren't necessary. They clutter things. For example, a one-line if and a one-line function
   should not use braces. For another example, a loop around such an if-statement should use braces, but the if-statement
   inside need not.
+- Don't spam comments in your code. You don't need a comment every line in most situations; instead focus on writing
+  clear and concise code that doesn't need a play-by-play explanation.
 
 If you have more questions, ask in your pull request.

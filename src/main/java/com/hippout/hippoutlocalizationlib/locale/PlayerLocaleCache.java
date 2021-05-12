@@ -1,5 +1,6 @@
-package com.hippout.hippoutlocalizationlib;
+package com.hippout.hippoutlocalizationlib.locale;
 
+import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 
@@ -24,7 +25,7 @@ public class PlayerLocaleCache {
      * @param plugin The instance of HippOutLocalizationLib.
      * @throws NullPointerException if plugin is null.
      */
-    PlayerLocaleCache(@Nonnull HippOutLocalizationLib plugin)
+    public PlayerLocaleCache(@Nonnull HippOutLocalizationLib plugin)
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
         playerLocaleMap = new HashMap<>();
@@ -51,6 +52,7 @@ public class PlayerLocaleCache {
      * Returns whether this PlayerLocaleCache contains information for the given UUID.
      *
      * @param id UUID to check
+     * @return True if the UUID is cached, false otherwise.
      * @throws NullPointerException if UUID is null.
      */
     public boolean isLocaleCached(@Nonnull UUID id)

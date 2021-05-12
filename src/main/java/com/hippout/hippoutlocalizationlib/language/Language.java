@@ -12,7 +12,7 @@ import java.util.*;
  *
  * @author Wyatt Kalmer
  */
-public class Language {
+class Language {
     private static final String ERROR_ADD_ALREADY_CONTAINS = "[%s] Message Map already contains given key %s.";
     private static final String ERROR_REMOVE_NOT_FOUND = "[%s] Message Map did not contain given key %s.";
     private static final String ERROR_GET_MESSAGE_NOT_FOUND = "[%s] The requested message %s could not be found.";

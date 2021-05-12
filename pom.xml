@@ -4,7 +4,7 @@
 
     <groupId>com.hippout</groupId>
     <artifactId>HippOutLocalizationLib</artifactId>
-    <version>0.3.0-SNAPSHOT-1.16.5</version>
+    <version>0.4.0-SNAPSHOT-1.16.5</version>
     <packaging>jar</packaging>
 
     <name>HippOutLocalizationLib</name>
@@ -81,6 +81,32 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <tags>
+                        <tag>
+                            <name>apiNote</name>
+                            <placement>a</placement>
+                            <head>Additional API notes. Why doesn't this work by default?</head>
+                        </tag>
+                        <tag>
+                            <name>enumValue</name>
+                            <placement>t</placement>
+                            <head>Value descriptor for enums.</head>
+                        </tag>
+                    </tags>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -4,9 +4,11 @@ A Bukkit Plugin API to make localization easy for plugin developers, programmed 
 
 ## Installation
 
-Download the [latest release](https://github.com/Wyatt-James/HippOutLocalizationLib/releases/latest) from the releases
-tab and place HippOutTranslationLib.jar into your Bukkit Server's `Plugins` folder. You must also remove any previous
-versions.
+Build or download the [latest release](https://github.com/Wyatt-James/HippOutLocalizationLib/releases/latest) from the
+releases tab and place HippOutLocalizationLib.jar into your Bukkit Server's `plugins` folder. You must also remove any
+previous versions.
+
+## Configuration
 
 ## Compiling
 
@@ -27,7 +29,7 @@ This project follows [Semantic Versioning 2.0.0.](https://semver.org/)
 
 Extra developer notes:
 
-- Wrap at column 105. Overrunning by a couple characters is fine.
+- Wrap at column 115. Overrunning by a couple characters is fine.
 - Import with wildcards when using more than one class in a package.
 - Performant code is important, but don't go insane. Don't bother with fast code for things that only run once, i.e. at
   server startup.

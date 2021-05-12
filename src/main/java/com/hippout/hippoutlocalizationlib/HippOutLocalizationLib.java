@@ -1,12 +1,13 @@
 package com.hippout.hippoutlocalizationlib;
 
 import com.hippout.hippoutlocalizationlib.language.*;
+import com.hippout.hippoutlocalizationlib.locale.*;
 import org.bukkit.plugin.java.*;
 
 import javax.annotation.*;
 
 /**
- * A Bukkit Plugin API to make Localizing text easy.
+ * A Bukkit Plugin API to make localizing text easy.
  *
  * @author Wyatt Kalmer.
  */
@@ -20,15 +21,6 @@ public class HippOutLocalizationLib extends JavaPlugin {
     private PlayerLocaleCache playerLocaleCache;
 
     private EventListener eventListener;
-
-    /**
-     * Returns the current instance of HippOutLocalizationLib. Null only if HippOutLocalizationLib was never even loaded.
-     */
-    @Nonnull
-    public static HippOutLocalizationLib getPlugin()
-    {
-        return instance;
-    }
 
     @Override
     public void onEnable()
@@ -59,7 +51,20 @@ public class HippOutLocalizationLib extends JavaPlugin {
     }
 
     /**
+     * Returns the current instance of HippOutLocalizationLib.
+     *
+     * @return the current instance of HippOutLocalizationLib.
+     */
+    @Nonnull
+    public static HippOutLocalizationLib getPlugin()
+    {
+        return instance;
+    }
+
+    /**
      * Returns the current Configuration.
+     *
+     * @return the current Configuration.
      */
     @Nonnull
     public Configuration getConfiguration()
@@ -68,7 +73,9 @@ public class HippOutLocalizationLib extends JavaPlugin {
     }
 
     /**
-     * Returns the current LangaugeHandler.
+     * Returns the current LanguageHandler.
+     *
+     * @return the current LanguageHandler.
      */
     @Nonnull
     public LanguageHandler getLanguageHandler()
@@ -78,6 +85,8 @@ public class HippOutLocalizationLib extends JavaPlugin {
 
     /**
      * Returns the current PlayerLocaleCache.
+     *
+     * @return the current PlayerLocaleCache.
      */
     @Nonnull
     public PlayerLocaleCache getPlayerLocaleCache()

@@ -1,5 +1,6 @@
-package com.hippout.hippoutlocalizationlib;
+package com.hippout.hippoutlocalizationlib.api;
 
+import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 
@@ -43,6 +44,8 @@ public class MessageReturnWrapper {
 
     /**
      * Returns the found Message. It is not guaranteed to be of the requested locale.
+     *
+     * @return the found message.
      */
     @Nonnull
     public String getMessage()
@@ -52,6 +55,8 @@ public class MessageReturnWrapper {
 
     /**
      * Returns the actual locale of the found Message. It is not guaranteed to be the requested Locale.
+     *
+     * @return the locale of the found Mesasge.
      */
     @Nonnull
     public String getLocale()
@@ -60,7 +65,9 @@ public class MessageReturnWrapper {
     }
 
     /**
-     * Returns the MessageType of this Message.
+     * Returns the MessageType of this MessageReturnWrapper.
+     *
+     * @return the MessageType of this MessageReturnWrapper.
      */
     @Nonnull
     public MessageType getMessageType()
@@ -77,10 +84,11 @@ public class MessageReturnWrapper {
     /**
      * Identifiers for different situations for locating Messages.
      *
-     * @value FOUND is used when the Message was found in the requested Language.
-     * @value DEFAULT_LANGUAGE_FALLBACK is used when the Message could not be found in the given language but was found
+     * @author Wyatt Kalmer
+     * @enumValue FOUND is used when the Message was found in the requested Language.
+     * @enumValue DEFAULT_LANGUAGE_FALLBACK is used when the Message could not be found in the given language but was found
      * in the Default Language.
-     * @value FAILSAFE_MESSAGE is used when the Message could not be found in either the requested Language or the
+     * @enumValue FAILSAFE_MESSAGE is used when the Message could not be found in either the requested Language or the
      * Default Language.
      */
     public enum MessageType {

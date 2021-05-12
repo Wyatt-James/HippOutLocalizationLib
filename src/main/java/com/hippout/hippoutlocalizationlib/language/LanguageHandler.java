@@ -1,7 +1,8 @@
 package com.hippout.hippoutlocalizationlib.language;
 
 import com.hippout.hippoutlocalizationlib.*;
-import com.hippout.hippoutlocalizationlib.MessageReturnWrapper.*;
+import com.hippout.hippoutlocalizationlib.api.*;
+import com.hippout.hippoutlocalizationlib.api.MessageReturnWrapper.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
@@ -75,13 +76,14 @@ public class LanguageHandler {
         String foundLocale;
         MessageType messageType;
 
+        final Language language = languageMap.get(locale);
+
         /*
          *  Attempt to load message from the language. If it could not be found, load it from the default language.
          *  If it still could not be found, load the fallback from the Configuration.
          *
-         *  IllegalArgumentExceptions are faster than language.containsMessage but much harder to read and write.
+         *  IllegalArgumentExceptions are faster than containsMessage but much harder to read write and maintain.
          */
-        Language language = languageMap.get(locale);
         if (language != null && language.containsMessage(messageKey)) {
             message = language.getMessage(messageKey);
             foundLocale = language.getLocale();

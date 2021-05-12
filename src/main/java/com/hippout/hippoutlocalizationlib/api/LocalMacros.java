@@ -1,6 +1,8 @@
-package com.hippout.hippoutlocalizationlib;
+package com.hippout.hippoutlocalizationlib.api;
 
+import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.language.*;
+import com.hippout.hippoutlocalizationlib.locale.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -9,12 +11,12 @@ import javax.annotation.*;
 import java.util.*;
 
 /**
- * A utility class for external-facing API functionality. While none of this is technically required, it makes things
- * much easier for plugin developers.
+ * A utility class for external-facing API macro functionality. While none of this is technically required, it makes
+ * things much easier for plugin developers.
  *
  * @author Wyatt Kalmer
  */
-public class ExternalUtils {
+public class LocalMacros {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
     /**
@@ -27,6 +29,7 @@ public class ExternalUtils {
      * @throws IllegalArgumentException if Recipients is empty.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      */
+    @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
                                                  @Nonnull Collection<? extends CommandSender> recipients,
                                                  @Nonnull Object[] formatArgs)
@@ -71,6 +74,7 @@ public class ExternalUtils {
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      * @apiNote Ends silently if no Players are online.
      */
+    @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object[] formatArgs)
     {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
@@ -86,6 +90,7 @@ public class ExternalUtils {
      * @throws NullPointerException     if MessageKey or Players is null.
      * @throws IllegalArgumentException if Recipients is empty.
      */
+    @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
                                                  @Nonnull Collection<? extends CommandSender> recipients)
     {
@@ -125,6 +130,7 @@ public class ExternalUtils {
      * @throws NullPointerException if MessageKey is null.
      * @apiNote Ends silently if no Players are online.
      */
+    @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey)
     {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
@@ -141,6 +147,7 @@ public class ExternalUtils {
      * @throws NullPointerException  if MessageKey, commandSender, or formatArgs is null.
      * @throws IllegalStateException if Player is offline.
      */
+    @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
                                             @Nonnull Object[] formatArgs)
     {
@@ -161,6 +168,7 @@ public class ExternalUtils {
      * @throws NullPointerException  if MessageKey or commandSender is null.
      * @throws IllegalStateException if Player is offline.
      */
+    @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -180,6 +188,7 @@ public class ExternalUtils {
      * @throws NullPointerException if commandSender is of type org.bukkit.Player and their UUID is not present in the
      *                              PlayerLocaleCache.
      */
+    @SuppressWarnings("unused")
     public static String getLocale(@Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(commandSender, "Command sender cannot be null.");

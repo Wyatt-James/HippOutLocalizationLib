@@ -36,7 +36,8 @@ public class ValidationUtil {
      * Validates and returns a given Locale with the given error message. For formatting, %1$s is the locale, which
      * will never be null.
      *
-     * @param locale Locale to validate
+     * @param locale             Locale to validate
+     * @param customErrorMessage A custom error message to pass to the LocaleFormatException.
      * @return The input Locale.
      * @throws NullPointerException  is thrown if locale is null.
      * @throws NullPointerException  is thrown if customErrorMessage is null.

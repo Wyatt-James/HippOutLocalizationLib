@@ -1,5 +1,6 @@
-package com.hippout.hippoutlocalizationlib;
+package com.hippout.hippoutlocalizationlib.locale;
 
+import com.hippout.hippoutlocalizationlib.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
@@ -29,6 +30,8 @@ public class EventListener implements Listener {
 
     /**
      * Updates the Player Locale Cache when their Locale changes or they join the server.
+     *
+     * @param event Event passed from Bukkit
      */
     @EventHandler
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
@@ -40,6 +43,8 @@ public class EventListener implements Listener {
     /**
      * Removes the Player from the Player Locale Cache when they disconnect, but only if
      * config.yml/debug.remove_disconnected_player_locales is set to true.
+     *
+     * @param event Event passed from Bukkit
      */
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)

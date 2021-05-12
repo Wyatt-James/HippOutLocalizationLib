@@ -1,8 +1,8 @@
-package com.hippout.hippoutlocalizationlib.util;
+package com.hippout.hippoutlocalizationlib.language;
 
 import com.hippout.hippoutlocalizationlib.Configuration;
 import com.hippout.hippoutlocalizationlib.*;
-import com.hippout.hippoutlocalizationlib.language.*;
+import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
 import org.bukkit.configuration.*;
 import org.bukkit.configuration.file.*;
@@ -17,6 +17,7 @@ import java.util.*;
  *
  * @author Wyatt Kalmer
  */
+@SuppressWarnings("unused")
 public class LanguageLoader {
     private final JavaPlugin plugin;
 

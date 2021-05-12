@@ -86,6 +86,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
+                    <jarOutputDirectory>${project.build.directory}/javadoc-jars</jarOutputDirectory>
                     <tags>
                         <tag>
                             <name>apiNote</name>

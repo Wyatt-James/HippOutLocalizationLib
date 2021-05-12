@@ -4,7 +4,7 @@
 
     <groupId>com.hippout</groupId>
     <artifactId>HippOutLocalizationLib</artifactId>
-    <version>0.4.0-SNAPSHOT-1.16.5</version>
+    <version>0.4.1-SNAPSHOT-1.16.5</version>
     <packaging>jar</packaging>
 
     <name>HippOutLocalizationLib</name>

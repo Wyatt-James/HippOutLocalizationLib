@@ -6,12 +6,13 @@ import org.bukkit.configuration.*;
 import org.bukkit.configuration.file.*;
 
 import javax.annotation.*;
+import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.*;
 
 /**
- * A Configuration class for HippOutLocalizationLib
+ * A Configuration class for HippOutLocalizationLib. Contains any internal-use flags and variables.
  *
  * @author Wyatt Kalmer
  */
@@ -50,13 +51,19 @@ public class Configuration {
      * Constructs a Configuration and loads from config.yml.
      *
      * @param plugin HippOutLocalizationLib instance.
-     * @throws NullPointerException  if plugin is null.
-     * @throws IllegalStateException if config_version is in an invalid format.
-     * @throws LocaleFormatException if any of the Locales in config.yml have an invalid format.
+     * @throws NullPointerException          if plugin is null.
+     * @throws IllegalStateException         if config_version is in an invalid format.
+     * @throws LocaleFormatException         if any of the Locales in config.yml have an invalid format.
+     * @throws IOException                   if Bukkit fails to reload the default configuration file config.yml.
+     * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
+     * @apiNote Creating a Configuration object overwrites whatever is loaded in this plugin's FileConfiguration. Use
+     * with care.
      */
-    Configuration(@Nonnull HippOutLocalizationLib plugin)
+    Configuration(@Nonnull HippOutLocalizationLib plugin) throws IOException, InvalidConfigurationException
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
+
+        loadConfigFile(); // Exceptions can be thrown here.
 
         final FileConfiguration rootConfig = this.plugin.getConfig();
         final ConfigurationSection debugConfig = rootConfig.getConfigurationSection("debug");
@@ -113,5 +120,20 @@ public class Configuration {
                 + " Yours: %s");
 
         return locale;
+    }
+
+    /**
+     * Reloads the default Configuration file config.yml from HippOutLocalizationLib's data folder.
+     *
+     * @throws IOException                   if Bukkit fails to find or load config.yml.
+     * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
+     */
+    private static void loadConfigFile() throws IOException, InvalidConfigurationException
+    {
+        final HippOutLocalizationLib plugin = HippOutLocalizationLib.getPlugin();
+        final String configPath = plugin.getDataFolder().getPath() + File.separator + "config.yml";
+        final FileConfiguration config = HippOutLocalizationLib.getPlugin().getConfig();
+
+        config.load(configPath);
     }
 }

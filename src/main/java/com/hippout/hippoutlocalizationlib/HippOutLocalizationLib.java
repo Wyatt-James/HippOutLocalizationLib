@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.*;
 import javax.annotation.*;
 
 /**
- * A Bukkit Plugin API to make localizing text easy.
+ * A Bukkit Plugin API to make localizing plugins easy.
  *
  * @author Wyatt Kalmer.
  */
@@ -30,7 +30,13 @@ public class HippOutLocalizationLib extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
 
-        this.configuration = new Configuration(this);
+        try {
+            this.configuration = new Configuration(this);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Configuration file config.yml. Plugin load failed. " +
+                    "Contact the plugin vendor for assistance.");
+        }
+
         this.languageHandler = new LanguageHandler(this, configuration.DEFAULT_LOCALE);
         this.playerLocaleCache = new PlayerLocaleCache(this);
         this.eventListener = new EventListener(this);

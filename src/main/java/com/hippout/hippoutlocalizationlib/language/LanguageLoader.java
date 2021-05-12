@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Loads a language file for a plugin.
+ * A convenient way to load language files into HippOutLocalizationLib.
  *
  * @author Wyatt Kalmer
  */
@@ -24,13 +24,14 @@ public class LanguageLoader {
     private final String languageDirectoryName;
 
     /**
-     * Constructs a LanguageLoader with the given JavaPlugin.
+     * Constructs a LanguageLoader with the given JavaPlugin as its parent.
      *
-     * @param plugin                Parent JavaPlugin of this LanguageLoader.
+     * @param plugin                Parent JavaPlugin of this LanguageLoader. See API Note.
      * @param languageDirectoryName Directory to load language resources from.
      * @throws NullPointerException if plugin or languageDirectoryName is null.
-     * @apiNote if languageDirectoryName is empty, will load from main data folder directory. This is discouraged
+     * @apiNote If languageDirectoryName is empty, will load from main data folder directory. This is discouraged
      * however.
+     * @apiNote Do NOT use HippOutLocalizationLib when using this as an API. For internal use only.
      */
     public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName)
     {

@@ -11,6 +11,7 @@ import java.util.*;
  * Wraps a Message with some additional details of how it was found.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class MessageReturnWrapper {
     private final String message;
@@ -28,6 +29,7 @@ public class MessageReturnWrapper {
      * @throws IllegalArgumentException if locale is empty.
      * @throws LocaleFormatException    if locale is not a valid format and config.yml/debug.api_regex_locale_tests is
      *                                  true.
+     * @since 1.0.0
      */
     public MessageReturnWrapper(@Nonnull String message, @Nonnull String locale, @Nonnull MessageType messageType)
     {
@@ -46,6 +48,7 @@ public class MessageReturnWrapper {
      * Returns the found Message. It is not guaranteed to be of the requested locale.
      *
      * @return the found message.
+     * @since 1.0.0
      */
     @Nonnull
     public String getMessage()
@@ -57,6 +60,7 @@ public class MessageReturnWrapper {
      * Returns the actual locale of the found Message. It is not guaranteed to be the requested Locale.
      *
      * @return the locale of the found Mesasge.
+     * @since 1.0.0
      */
     @Nonnull
     public String getLocale()
@@ -68,6 +72,7 @@ public class MessageReturnWrapper {
      * Returns the MessageType of this MessageReturnWrapper.
      *
      * @return the MessageType of this MessageReturnWrapper.
+     * @since 1.0.0
      */
     @Nonnull
     public MessageType getMessageType()
@@ -90,6 +95,7 @@ public class MessageReturnWrapper {
      * in the Default Language.
      * @enumValue FAILSAFE_MESSAGE is used when the Message could not be found in either the requested Language or the
      * Default Language.
+     * @since 1.0.0
      */
     public enum MessageType {
         FOUND, DEFAULT_LANGUAGE_FALLBACK, FAILSAFE_MESSAGE

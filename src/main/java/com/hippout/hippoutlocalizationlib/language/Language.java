@@ -11,6 +11,7 @@ import java.util.*;
  * Represents a container for all messages associated with a given language.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 class Language {
     private static final String ERROR_ADD_ALREADY_CONTAINS = "[%s] Message Map already contains given key %s.";
@@ -32,6 +33,7 @@ class Language {
      * @throws NullPointerException if locale is null.
      * @apiNote The LanguageHandler should either convert incoming codes to lowercase-only or throw an exception,
      * meaning that the Pattern test should never fail for case sensitivity.
+     * @since 1.0.0
      */
     Language(@Nonnull HippOutLocalizationLib plugin, @Nonnull String locale)
     {
@@ -48,6 +50,7 @@ class Language {
      * @throws NullPointerException     if messageKey is null.
      * @throws NullPointerException     if message is null.
      * @throws IllegalArgumentException if given messageKey was already present in this Language.
+     * @since 1.0.0
      */
     void addMessage(@Nonnull NamespacedKey messageKey, @Nonnull String message)
     {
@@ -67,6 +70,7 @@ class Language {
      * @param messageKey Key to remove message of
      * @throws NullPointerException     if messageKey is null.
      * @throws IllegalArgumentException if the message could not be found.
+     * @since 1.0.0
      */
     void removeMessage(@Nonnull NamespacedKey messageKey)
     {
@@ -86,6 +90,7 @@ class Language {
      * @return The requested message
      * @throws NullPointerException     if messageKey is null.
      * @throws IllegalArgumentException if the message could not be found.
+     * @since 1.0.0
      */
     @Nonnull
     String getMessage(@Nonnull NamespacedKey messageKey)
@@ -105,6 +110,7 @@ class Language {
      *
      * @param messageKey Key to check.
      * @throws NullPointerException if messageKey is null.
+     * @since 1.0.0
      */
     boolean containsMessage(@Nonnull NamespacedKey messageKey)
     {
@@ -121,6 +127,7 @@ class Language {
      * @throws NullPointerException     if Key is null.
      * @throws IllegalArgumentException if Key is empty.
      * @apiNote For internal use only.
+     * @since 1.0.0
      */
     @Nullable
     NamespacedKey getMessageKey(@Nonnull String key)
@@ -139,6 +146,9 @@ class Language {
     /**
      * Returns ISO-639 the Locale of this Language. It will be entirely in lowercase and will always have a language
      * extension code, separated by an underscore.
+     *
+     * @return The Locale of this Language.
+     * @since 1.0.0
      */
     @Nonnull
     String getLocale()

@@ -11,6 +11,7 @@ import java.util.*;
  * A cache for Player Locales.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class PlayerLocaleCache {
     private static final String ERROR_LOCALE_NOT_FOUND = "Could not find Locale for UUID %s. They are offline or they" +
@@ -24,6 +25,7 @@ public class PlayerLocaleCache {
      *
      * @param plugin The instance of HippOutLocalizationLib.
      * @throws NullPointerException if plugin is null.
+     * @since 1.0.0
      */
     public PlayerLocaleCache(@Nonnull HippOutLocalizationLib plugin)
     {
@@ -39,6 +41,7 @@ public class PlayerLocaleCache {
      * @throws NullPointerException if UUID is null.
      * @throws NullPointerException if the UUID is not present. This will depend on the configuration
      *                              config.yml/debug.remove_disconnected_player_locales.
+     * @since 1.0.0
      */
     @Nonnull
     public String getPlayerLocale(@Nonnull UUID id)
@@ -54,6 +57,7 @@ public class PlayerLocaleCache {
      * @param id UUID to check
      * @return True if the UUID is cached, false otherwise.
      * @throws NullPointerException if UUID is null.
+     * @since 1.0.0
      */
     public boolean isLocaleCached(@Nonnull UUID id)
     {
@@ -68,6 +72,7 @@ public class PlayerLocaleCache {
      * @param locale Locale to set the UUID to.
      * @throws NullPointerException  if UUID or Locale are null.
      * @throws LocaleFormatException if INTERNAL_REGEX_LOCALE_TESTS are enabled and locale is not a valid format.
+     * @since 1.0.0
      */
     void setPlayerLocale(@Nonnull UUID id, @Nonnull String locale)
     {
@@ -84,6 +89,7 @@ public class PlayerLocaleCache {
      *
      * @param id UUID to remove the Locale of.
      * @throws NullPointerException if UUID is null.
+     * @since 1.0.0
      */
     void removePlayerLocale(@Nonnull UUID id)
     {

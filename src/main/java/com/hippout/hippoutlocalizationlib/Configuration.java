@@ -15,6 +15,7 @@ import java.util.regex.*;
  * A Configuration class for HippOutLocalizationLib. Contains any internal-use flags and variables.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class Configuration {
     private static final String VERSION_REGEX = "^[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,3}$";
@@ -58,6 +59,7 @@ public class Configuration {
      * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
      * @apiNote Creating a Configuration object overwrites whatever is loaded in this plugin's FileConfiguration. Use
      * with care.
+     * @since 1.0.0
      */
     Configuration(@Nonnull HippOutLocalizationLib plugin) throws IOException, InvalidConfigurationException
     {
@@ -106,6 +108,7 @@ public class Configuration {
      * @throws NullPointerException  if the requested variable could not be found.
      * @throws LocaleFormatException if the requested variable was not a valid Locale as per the regex in
      *                               ValidationUtil.
+     * @since 1.0.0
      */
     @Nonnull
     private static String loadLocale(@Nonnull ConfigurationSection configurationSection, @Nonnull String varName)
@@ -127,6 +130,7 @@ public class Configuration {
      *
      * @throws IOException                   if Bukkit fails to find or load config.yml.
      * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
+     * @since 1.0.0
      */
     private static void loadConfigFile() throws IOException, InvalidConfigurationException
     {

@@ -17,11 +17,11 @@ import java.util.*;
  * A convenient way to load language files into HippOutLocalizationLib.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 @SuppressWarnings("unused")
 public class LanguageLoader {
     private final JavaPlugin plugin;
-
     private final String languageDirectoryName;
 
     /**
@@ -33,6 +33,7 @@ public class LanguageLoader {
      * @apiNote If languageDirectoryName is empty, will load from main data folder directory. This is discouraged
      * however.
      * @apiNote Do NOT use HippOutLocalizationLib when using this as an API. For internal use only.
+     * @since 1.0.0
      */
     public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName)
     {
@@ -49,6 +50,7 @@ public class LanguageLoader {
      * @return A List of the NamespacedKeys created or found by this method which were added with Messages.
      * @throws NullPointerException     if languageSection or locales are null.
      * @throws IllegalArgumentException if locales is empty.
+     * @since 1.0.0
      */
     public List<NamespacedKey> loadLanguage(@Nonnull ConfigurationSection languageSection, @Nonnull String... locales)
     {
@@ -105,6 +107,7 @@ public class LanguageLoader {
      * @apiNote Bukkit only stores one FileConfiguration object per plugin, so loading a language file with this method
      * will overwrite the previous loaded FileConfiguration. The return is only for convenience and should not imply
      * any separation.
+     * @since 1.0.0
      */
     public FileConfiguration loadLanguageConfig(@Nonnull String fileName) throws IOException, InvalidConfigurationException
     {

@@ -10,6 +10,7 @@ import javax.annotation.*;
  * A Bukkit Plugin API to make localizing plugins easy.
  *
  * @author Wyatt Kalmer.
+ * @since 1.0.0
  */
 public class HippOutLocalizationLib extends JavaPlugin {
     public static final String FAILSAFE_LOCALE = "failsafe_lc";
@@ -60,6 +61,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
      * Returns the current instance of HippOutLocalizationLib.
      *
      * @return the current instance of HippOutLocalizationLib.
+     * @since 1.0.0
      */
     @Nonnull
     public static HippOutLocalizationLib getPlugin()
@@ -71,6 +73,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
      * Returns the current Configuration.
      *
      * @return the current Configuration.
+     * @since 1.0.0
      */
     @Nonnull
     public Configuration getConfiguration()
@@ -82,6 +85,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
      * Returns the current LanguageHandler.
      *
      * @return the current LanguageHandler.
+     * @since 1.0.0
      */
     @Nonnull
     public LanguageHandler getLanguageHandler()
@@ -93,6 +97,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
      * Returns the current PlayerLocaleCache.
      *
      * @return the current PlayerLocaleCache.
+     * @since 1.0.0
      */
     @Nonnull
     public PlayerLocaleCache getPlayerLocaleCache()

@@ -10,6 +10,7 @@ import java.util.regex.*;
  * A utility class for easily validating various parameters throughout the project.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class ValidationUtil {
     public static final String LOCALE_REGEX = "(^[a-z\\-]{2,8}_[a-z0-9]{2,3}$)|(^[a-z]{2,8}$)";
@@ -25,6 +26,7 @@ public class ValidationUtil {
      * @return The input Locale.
      * @throws NullPointerException  is thrown if locale is null.
      * @throws LocaleFormatException is thrown if locale does not follow the format of ValidationUtil.LOCALE_REGEX.
+     * @since 1.0.0
      */
     @Nonnull
     public static String validateLocale(@Nonnull String locale)
@@ -42,6 +44,7 @@ public class ValidationUtil {
      * @throws NullPointerException  is thrown if locale is null.
      * @throws NullPointerException  is thrown if customErrorMessage is null.
      * @throws LocaleFormatException is thrown if locale does not follow the format of ValidationUtil.LOCALE_REGEX.
+     * @since 1.0.0
      */
     @Nonnull
     public static String validateLocale(@Nonnull String locale, @Nonnull String customErrorMessage)

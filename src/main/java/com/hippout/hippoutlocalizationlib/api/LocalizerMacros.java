@@ -15,8 +15,9 @@ import java.util.*;
  * things much easier for plugin developers.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
-public class LocalMacros {
+public class LocalizerMacros {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
     /**
@@ -28,6 +29,7 @@ public class LocalMacros {
      * @throws NullPointerException     if MessageKey, Players, or formatArgs is null.
      * @throws IllegalArgumentException if Recipients is empty.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
@@ -73,6 +75,7 @@ public class LocalMacros {
      * @throws NullPointerException if MessageKey or formatArgs is null.
      * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
      * @apiNote Ends silently if no Players are online.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object[] formatArgs)
@@ -89,6 +92,7 @@ public class LocalMacros {
      * @param recipients CommandSenders to broadcast to. Note that they may not have actually sent the Command.
      * @throws NullPointerException     if MessageKey or Players is null.
      * @throws IllegalArgumentException if Recipients is empty.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
@@ -129,6 +133,7 @@ public class LocalMacros {
      * @param messageKey Message Key to send.
      * @throws NullPointerException if MessageKey is null.
      * @apiNote Ends silently if no Players are online.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey)
@@ -146,6 +151,7 @@ public class LocalMacros {
      * @param formatArgs    String formatting arguments.
      * @throws NullPointerException  if MessageKey, commandSender, or formatArgs is null.
      * @throws IllegalStateException if Player is offline.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
@@ -167,6 +173,7 @@ public class LocalMacros {
      * @param commandSender CommandSender to send the Message to.
      * @throws NullPointerException  if MessageKey or commandSender is null.
      * @throws IllegalStateException if Player is offline.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
@@ -187,6 +194,7 @@ public class LocalMacros {
      * @throws NullPointerException if commandSender is null.
      * @throws NullPointerException if commandSender is of type org.bukkit.Player and their UUID is not present in the
      *                              PlayerLocaleCache.
+     * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static String getLocale(@Nonnull CommandSender commandSender)

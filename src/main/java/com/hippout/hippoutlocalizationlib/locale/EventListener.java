@@ -8,9 +8,10 @@ import javax.annotation.*;
 import java.util.*;
 
 /**
- * Listens for Player Locale changes and disconnects.
+ * Listens for Player Locale changes and disconnects and modifies the Player Locale Cache appropriately.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class EventListener implements Listener {
     private static final String LOG_PLAYER_LOCALE_CHANGED = "Player %s changed Locale to %s.";
@@ -22,6 +23,7 @@ public class EventListener implements Listener {
      *
      * @param plugin HippOutLocalizationLib instance.
      * @throws NullPointerException if plugin is null.
+     * @since 1.0.0
      */
     public EventListener(@Nonnull HippOutLocalizationLib plugin)
     {
@@ -32,6 +34,7 @@ public class EventListener implements Listener {
      * Updates the Player Locale Cache when their Locale changes or they join the server.
      *
      * @param event Event passed from Bukkit
+     * @since 1.0.0
      */
     @EventHandler
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
@@ -45,6 +48,7 @@ public class EventListener implements Listener {
      * config.yml/debug.remove_disconnected_player_locales is set to true.
      *
      * @param event Event passed from Bukkit
+     * @since 1.0.0
      */
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)

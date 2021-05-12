@@ -17,7 +17,7 @@ import java.util.*;
  * @author Wyatt Kalmer
  * @since 1.0.0
  */
-public class LocalizerMacros {
+public class Macros {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
     /**

@@ -1,7 +1,6 @@
 package com.hippout.hippoutlocalizationlib.locale;
 
 import com.hippout.hippoutlocalizationlib.*;
-import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
@@ -40,7 +39,6 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        plugin.getLogger().info(ChatColor.RED + "EventListener.");
         plugin.getPlayerLocaleCache().setPlayerLocale(event.getPlayer().getUniqueId(), event.getPlayer().getLocale());
         plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_CHANGED,
                 event.getPlayer().getName(), event.getPlayer().getLocale()));

@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <project.build.javadocOutputDir>${project.build.directory}/javadoc-jars</project.build.javadocOutputDir>
     </properties>
 
     <repositories>
@@ -86,7 +87,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <jarOutputDirectory>${project.build.directory}/javadoc-jars</jarOutputDirectory>
+                    <jarOutputDirectory>${project.build.javadocOutputDir}</jarOutputDirectory>
                     <tags>
                         <tag>
                             <name>apiNote</name>

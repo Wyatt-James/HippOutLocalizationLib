@@ -1,6 +1,7 @@
 package com.hippout.hippoutlocalizationlib.locale;
 
 import com.hippout.hippoutlocalizationlib.*;
+import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
@@ -31,12 +32,27 @@ public class EventListener implements Listener {
     }
 
     /**
+     * Updates the Player Locale Cache when they join the server.
+     *
+     * @param event Event passed from Bukkit
+     * @since 1.0.0
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
+        plugin.getLogger().info(ChatColor.RED + "EventListener.");
+        plugin.getPlayerLocaleCache().setPlayerLocale(event.getPlayer().getUniqueId(), event.getPlayer().getLocale());
+        plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_CHANGED,
+                event.getPlayer().getName(), event.getPlayer().getLocale()));
+    }
+
+    /**
      * Updates the Player Locale Cache when their Locale changes or they join the server.
      *
      * @param event Event passed from Bukkit
      * @since 1.0.0
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
     {
         plugin.getPlayerLocaleCache().setPlayerLocale(event.getPlayer().getUniqueId(), event.getLocale());
@@ -50,7 +66,7 @@ public class EventListener implements Listener {
      * @param event Event passed from Bukkit
      * @since 1.0.0
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent event)
     {
         if (plugin.getConfiguration().REMOVE_DISCONNECTED_PLAYER_LOCALES) {

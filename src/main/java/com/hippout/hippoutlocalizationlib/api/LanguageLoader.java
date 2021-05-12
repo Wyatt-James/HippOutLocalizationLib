@@ -1,7 +1,8 @@
-package com.hippout.hippoutlocalizationlib.language;
+package com.hippout.hippoutlocalizationlib.api;
 
 import com.hippout.hippoutlocalizationlib.Configuration;
 import com.hippout.hippoutlocalizationlib.*;
+import com.hippout.hippoutlocalizationlib.language.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
 import org.bukkit.configuration.*;

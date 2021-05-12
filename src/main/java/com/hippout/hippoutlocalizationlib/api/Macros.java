@@ -34,7 +34,7 @@ public class Macros {
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
                                                  @Nonnull Collection<? extends CommandSender> recipients,
-                                                 @Nonnull Object[] formatArgs)
+                                                 @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
@@ -78,7 +78,7 @@ public class Macros {
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object[] formatArgs)
+    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
     {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         if (onlinePlayers.size() > 0)
@@ -155,7 +155,7 @@ public class Macros {
      */
     @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
-                                            @Nonnull Object[] formatArgs)
+                                            @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");

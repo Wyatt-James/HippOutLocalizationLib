@@ -2,6 +2,7 @@ package com.hippout.hippoutlocalizationlib;
 
 import com.hippout.hippoutlocalizationlib.language.*;
 import com.hippout.hippoutlocalizationlib.locale.*;
+import org.bukkit.*;
 import org.bukkit.plugin.java.*;
 
 import javax.annotation.*;
@@ -39,7 +40,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
         }
 
         this.languageHandler = new LanguageHandler(this, configuration.DEFAULT_LOCALE);
-        this.playerLocaleCache = new PlayerLocaleCache(this);
+        this.playerLocaleCache = new PlayerLocaleCache(this, Bukkit.getOnlinePlayers());
         this.eventListener = new EventListener(this);
 
         getServer().getPluginManager().registerEvents(this.eventListener, this);

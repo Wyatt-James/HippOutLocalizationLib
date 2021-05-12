@@ -3,6 +3,7 @@ package com.hippout.hippoutlocalizationlib.locale;
 import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
+import org.bukkit.entity.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -31,6 +32,22 @@ public class PlayerLocaleCache {
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
         playerLocaleMap = new HashMap<>();
+    }
+
+    /**
+     * Constructs a Player Locale Cache with the given plugin.
+     *
+     * @param plugin         The instance of HippOutLocalizationLib.
+     * @param initialPlayers Collection of Players to populate this PlayerLocaleCache with.
+     * @throws NullPointerException if plugin or initialPlayers is null.
+     * @since 1.0.0
+     */
+    public PlayerLocaleCache(@Nonnull HippOutLocalizationLib plugin, @Nonnull Collection<? extends Player> initialPlayers)
+    {
+        this(plugin);
+
+        Objects.requireNonNull(initialPlayers, "Initial Players List cannot be null.");
+        initialPlayers.forEach(p -> setPlayerLocale(p.getUniqueId(), p.getLocale()));
     }
 
     /**

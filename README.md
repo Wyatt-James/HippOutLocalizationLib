@@ -29,13 +29,7 @@ This project follows [Semantic Versioning 2.0.0.](https://semver.org/)
 
 Extra developer notes:
 
-- Wrap at column 115. Overrunning by a couple characters is fine.
-- Import with wildcards when using more than one class in a package.
-- Performant code is important, but don't go insane. Don't bother with fast code for things that only run once, i.e. at
-  server startup.
-- Fail early. Exceptions are all the rage these days, aren't they?
-- Don't squash commits coz high numbers are fun. However, only one version increment per pull request.
-- More style guidelines coming soon to a github repo near you!
+- For code style, see [CODE-STYLE.md.](https://github.com/Wyatt-James/HippOutLocalizationLib/blob/master/CODE-STYLE.md)
 
 ## License
 

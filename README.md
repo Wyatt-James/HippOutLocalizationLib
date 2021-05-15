@@ -30,6 +30,8 @@ This project follows [Semantic Versioning 2.0.0.](https://semver.org/)
 Extra developer notes:
 
 - For code style, see [CODE-STYLE.md.](https://github.com/Wyatt-James/HippOutLocalizationLib/blob/master/CODE-STYLE.md)
+- You can find the Javadoc on the [HippOut website.](http://hippout.com/dev/hippoutlocalizationlib) Currently under
+  construction. It may not always be completely up to date as there is no automation yet.
 
 ## License
 

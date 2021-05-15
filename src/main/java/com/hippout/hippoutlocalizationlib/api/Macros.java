@@ -3,6 +3,7 @@ package com.hippout.hippoutlocalizationlib.api;
 import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.language.*;
 import com.hippout.hippoutlocalizationlib.locale.*;
+import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -28,7 +29,7 @@ public class Macros {
      * @param formatArgs String Formatting arguments.
      * @throws NullPointerException     if MessageKey, Players, or formatArgs is null.
      * @throws IllegalArgumentException if Recipients is empty.
-     * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
+     * @api.Note The String formatting arguments are only formatted once per Locale to save on processing time.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
@@ -43,7 +44,7 @@ public class Macros {
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
         MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
@@ -73,13 +74,16 @@ public class Macros {
      * @param messageKey Message Key to send.
      * @param formatArgs String Formatting arguments.
      * @throws NullPointerException if MessageKey or formatArgs is null.
-     * @apiNote The String formatting arguments are only formatted once per Locale to save on processing time.
-     * @apiNote Ends silently if no Players are online.
+     * @api.Note The String formatting arguments are only formatted once per Locale to save on processing time.
+     * @api.Note Ends silently if no Players are online.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
     {
+        Objects.requireNonNull(messageKey, "Message Key cannot be null.");
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         if (onlinePlayers.size() > 0)
             broadcastLocalizedMessage(messageKey, onlinePlayers, formatArgs);
@@ -104,7 +108,7 @@ public class Macros {
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final PlayerLocaleCache playerLocaleCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
         MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
@@ -132,12 +136,14 @@ public class Macros {
      *
      * @param messageKey Message Key to send.
      * @throws NullPointerException if MessageKey is null.
-     * @apiNote Ends silently if no Players are online.
+     * @api.Note Ends silently if no Players are online.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey)
     {
+        Objects.requireNonNull(messageKey, "Message Key cannot be null.");
+
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         if (onlinePlayers.size() > 0)
             broadcastLocalizedMessage(messageKey, onlinePlayers);
@@ -158,6 +164,7 @@ public class Macros {
                                             @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
 
         final String locale = getLocale(commandSender);
@@ -179,11 +186,50 @@ public class Macros {
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
 
         final String locale = getLocale(commandSender);
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
 
         commandSender.sendMessage(languageHandler.getLocalizedMessage(locale, messageKey).getMessage());
+    }
+
+    /**
+     * Returns a localized Message with the given CommandSender's Locale.
+     *
+     * @param messageKey    Message Key to retrieve.
+     * @param commandSender CommandSender to get the Locale of.
+     * @return A Localized MEssage String with the given CommandSender's Locale.
+     * @throws NullPointerException if MessageKey or commandSender is null.
+     * @since 1.0.0
+     */
+    public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
+    {
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
+
+        return getLocalizedMessage(messageKey, getLocale(commandSender));
+    }
+
+    /**
+     * Returns a localized Message with the given Locale.
+     *
+     * @param messageKey Message Key to retrieve.
+     * @param locale     Locale String to get the message from.
+     * @return A Localized MEssage String with the given Locale.
+     * @throws NullPointerException if MessageKey or commandSender is null.
+     * @since 1.0.0
+     */
+    public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull String locale)
+    {
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(locale, "Locale cannot be null.");
+
+        if (HippOutLocalizationLib.getPlugin().getConfiguration().API_REGEX_LOCALE_TESTS)
+            ValidationUtil.validateLocale(locale);
+
+        final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
+        return languageHandler.getLocalizedMessage(locale, messageKey).getMessage();
     }
 
     /**
@@ -193,7 +239,7 @@ public class Macros {
      * @return The Locale. May be a default.
      * @throws NullPointerException if commandSender is null.
      * @throws NullPointerException if commandSender is of type org.bukkit.Player and their UUID is not present in the
-     *                              PlayerLocaleCache.
+     *                              LocaleCache.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
@@ -205,7 +251,44 @@ public class Macros {
         String locale;
 
         if (commandSender instanceof Player)
-            locale = plugin.getPlayerLocaleCache().getPlayerLocale(((Player) commandSender).getUniqueId());
+            locale = plugin.getPlayerLocaleCache().getLocale(((Player) commandSender).getUniqueId());
+
+        else if (commandSender instanceof ConsoleCommandSender)
+            locale = plugin.getConfiguration().CONSOLE_LOCALE;
+
+        else if (commandSender instanceof RemoteConsoleCommandSender)
+            locale = plugin.getConfiguration().REMOTE_CONSOLE_LOCALE;
+
+        else if (commandSender instanceof ProxiedCommandSender)
+            return getLocale(((ProxiedCommandSender) commandSender).getCaller());
+
+        else
+            locale = plugin.getConfiguration().DEFAULT_LOCALE;
+
+        return locale;
+    }
+
+    /**
+     * Fetches the Locale of the given CommandSender, excluding any Overrides. For ProxiedCommandSenders, recursively
+     * fetches caller.
+     *
+     * @param commandSender CommandSender to get the Locale of.
+     * @return The Locale. May be a default.
+     * @throws NullPointerException if commandSender is null.
+     * @throws NullPointerException if commandSender is of type org.bukkit.Player and their UUID is not present in the
+     *                              LocaleCache.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static String getLocaleNoOverride(@Nonnull CommandSender commandSender)
+    {
+        Objects.requireNonNull(commandSender, "Command sender cannot be null.");
+
+        HippOutLocalizationLib plugin = HippOutLocalizationLib.getPlugin();
+        String locale;
+
+        if (commandSender instanceof Player)
+            locale = plugin.getPlayerLocaleCache().getLocaleNoOverride(((Player) commandSender).getUniqueId());
 
         else if (commandSender instanceof ConsoleCommandSender)
             locale = plugin.getConfiguration().CONSOLE_LOCALE;

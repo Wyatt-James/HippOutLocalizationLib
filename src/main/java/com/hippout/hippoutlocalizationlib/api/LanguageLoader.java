@@ -30,9 +30,9 @@ public class LanguageLoader {
      * @param plugin                Parent JavaPlugin of this LanguageLoader. See API Note.
      * @param languageDirectoryName Directory to load language resources from.
      * @throws NullPointerException if plugin or languageDirectoryName is null.
-     * @apiNote If languageDirectoryName is empty, will load from main data folder directory. This is discouraged
+     * @api.Note If languageDirectoryName is empty, will load from main data folder directory. This is discouraged
      * however.
-     * @apiNote Do NOT use HippOutLocalizationLib when using this as an API. For internal use only.
+     * @api.Note Do NOT use HippOutLocalizationLib when using this as an API. For internal use only.
      * @since 1.0.0
      */
     public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName)
@@ -104,7 +104,7 @@ public class LanguageLoader {
      * @throws IllegalArgumentException      if fileName is empty.
      * @throws IOException                   if config.load fails to load the requested file.
      * @throws InvalidConfigurationException if config.load can load the requested file but it is not a valid YAML file.
-     * @apiNote Bukkit only stores one FileConfiguration object per plugin, so loading a language file with this method
+     * @api.Note Bukkit only stores one FileConfiguration object per plugin, so loading a language file with this method
      * will overwrite the previous loaded FileConfiguration. The return is only for convenience and should not imply
      * any separation.
      * @since 1.0.0

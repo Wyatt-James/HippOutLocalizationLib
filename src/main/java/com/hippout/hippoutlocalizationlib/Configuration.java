@@ -40,9 +40,12 @@ public class Configuration {
 
     private final HippOutLocalizationLib plugin;
 
+    public final boolean ENABLE_LOCALE_OVERRIDES;
+
     public final String CONFIG_VERSION;
     public final String FAILSAFE_MESSAGE;
     public final String DEFAULT_LOCALE, CONSOLE_LOCALE, REMOTE_CONSOLE_LOCALE;
+    private final List<String> LANGUAGE_FILE_DEFINITIONS;
 
     public final boolean API_REGEX_LOCALE_TESTS;
     public final boolean INTERNAL_REGEX_LOCALE_TESTS;
@@ -57,7 +60,7 @@ public class Configuration {
      * @throws LocaleFormatException         if any of the Locales in config.yml have an invalid format.
      * @throws IOException                   if Bukkit fails to reload the default configuration file config.yml.
      * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
-     * @apiNote Creating a Configuration object overwrites whatever is loaded in this plugin's FileConfiguration. Use
+     * @api.Note Creating a Configuration object overwrites whatever is loaded in this plugin's FileConfiguration. Use
      * with care.
      * @since 1.0.0
      */
@@ -84,14 +87,28 @@ public class Configuration {
 
         FAILSAFE_MESSAGE = failsafeMessage;
 
+        LANGUAGE_FILE_DEFINITIONS = rootConfig.getStringList("language_files");
+
         // Load default and console Locales
         DEFAULT_LOCALE = loadLocale(rootConfig, "default_locale");
         CONSOLE_LOCALE = loadLocale(rootConfig, "console_locale");
         REMOTE_CONSOLE_LOCALE = loadLocale(rootConfig, "remote_console_locale");
 
+        ENABLE_LOCALE_OVERRIDES = rootConfig.getBoolean("enable_locale_overrides");
+
         API_REGEX_LOCALE_TESTS = debugConfig.getBoolean("api_regex_locale_tests", false);
         INTERNAL_REGEX_LOCALE_TESTS = debugConfig.getBoolean("internal_regex_locale_tests", false);
         REMOVE_DISCONNECTED_PLAYER_LOCALES = debugConfig.getBoolean("remove_disconnected_player_locales", true);
+    }
+
+    /**
+     * Gets a List of Language File definitions.
+     *
+     * @return A copy of the List of Language File Definitions.
+     */
+    public List<String> getLanguageFileDefinitions()
+    {
+        return new ArrayList<>(LANGUAGE_FILE_DEFINITIONS);
     }
 
     /**

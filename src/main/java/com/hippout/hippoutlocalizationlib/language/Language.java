@@ -31,7 +31,7 @@ class Language {
      *               <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html>Oracle's Documentation</a>.
      *               Must abide by the regex stored in util.ValidationUtil.
      * @throws NullPointerException if locale is null.
-     * @apiNote The LanguageHandler should either convert incoming codes to lowercase-only or throw an exception,
+     * @api.Note The LanguageHandler should either convert incoming codes to lowercase-only or throw an exception,
      * meaning that the Pattern test should never fail for case sensitivity.
      * @since 1.0.0
      */
@@ -126,7 +126,7 @@ class Language {
      * @return The requested NamespacedKey, or null if it did not exist.
      * @throws NullPointerException     if Key is null.
      * @throws IllegalArgumentException if Key is empty.
-     * @apiNote For internal use only.
+     * @api.Note For internal use only.
      * @since 1.0.0
      */
     @Nullable

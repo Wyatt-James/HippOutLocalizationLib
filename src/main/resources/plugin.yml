@@ -5,3 +5,28 @@ api-version: ${pluginyml.apiVersion}
 website: ${project.url}
 author: Wyatt_James
 depend: [ ]
+
+commands:
+  setlocaleoverride:
+    description: Sets a Player's Locale Override.
+    usage: /setlocaleoverride <p:<player name> | u:<UUID>> <locale>
+    permission: hippoutlocalizationlib.locales.manage
+    permission-message: You do not have have permission to use this command.
+  removelocaleoverride:
+    description: Removes a Player's Locale Override.
+    usage: /removelocaleoverride <p:<player name> | u:<UUID>>
+    permission: hippoutlocalizationlib.locales.manage
+    permission-message: You do not have have permission to use this command.
+  locale:
+    description: Checks a Player's or UUID's Locale.
+    usage: /locale <p:<player name> | u:<UUID>>
+    permission: hippoutlocalizationlib.locales.check
+    permission-message: You do not have have permission to use this command.
+
+permissions:
+  hippoutlocalizationlib.locales.manage:
+    description: Allows you to manage Locales.
+    default: op
+  hippoutlocalizationlib.locales.check:
+    description: Allows you to check Locales.
+    default: op

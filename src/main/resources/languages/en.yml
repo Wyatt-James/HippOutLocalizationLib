@@ -1,0 +1,24 @@
+config:
+  aliases: [ en_au,en_ca,en_gb,en_nz,en_pt,en_us ]
+messages:
+  invalid_format_locale: "§cInvalid Locale: %s."
+  command_disabled: "§eThis command is disabled."
+  player_not_found: "§eThe requested Player %s could not be found."
+
+  targetargs:
+    invalid_type: "§cInvalid target type: %s. Valid types are: p(Player), u(UUID)"
+    invalid_format: "§cInvalid format: %s. Valid formats are: p<Player>, u<UUID>"
+
+  command:
+    setlocaleoverride:
+      usage: "/setlocaleoverride <p:<player name> | u:<UUID>> <locale>"
+      success: "§aSuccessfully set the Locale Override for %s to %s."
+    removelocaleoverride:
+      usage: "/removelocaleoverride <p:<player name> | u:<UUID>>"
+      success: "§aSuccessfully removed the Locale Override for %s."
+      no_override: "§e%s does not exist or has no Locale Override set."
+    locale:
+      usage: "/locale <p:<player name> | u:<UUID>>"
+      success: "§aLocale of %s: %s."
+      success_override: "§aOverriden Locale of %s: %s."
+      no_locale: "§a%s does not exist or has no Locale."

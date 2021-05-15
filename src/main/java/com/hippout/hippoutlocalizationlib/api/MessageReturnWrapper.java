@@ -90,10 +90,10 @@ public class MessageReturnWrapper {
      * Identifiers for different situations for locating Messages.
      *
      * @author Wyatt Kalmer
-     * @enumValue FOUND is used when the Message was found in the requested Language.
-     * @enumValue DEFAULT_LANGUAGE_FALLBACK is used when the Message could not be found in the given language but was found
-     * in the Default Language.
-     * @enumValue FAILSAFE_MESSAGE is used when the Message could not be found in either the requested Language or the
+     * @enum.Value FOUND is used when the Message was found in the requested Language.
+     * @enum.Value DEFAULT_LANGUAGE_FALLBACK is used when the Message could not be found in the given language but
+     * was found in the Default Language.
+     * @enum.Value FAILSAFE_MESSAGE is used when the Message could not be found in either the requested Language or the
      * Default Language.
      * @since 1.0.0
      */

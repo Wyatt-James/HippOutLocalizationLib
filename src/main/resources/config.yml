@@ -1,5 +1,8 @@
 config_version: "0.0.1"
 
+# List of language files to load from the languages configuration sub-folder.
+language_files: [ en ]
+
 # Default fall-back locale for things such as Players.
 default_locale: "en_us"
 
@@ -11,10 +14,16 @@ console_locale: "en_us"
 # messages. This is a good option for a Spanish-speaking host running an English server, for example.
 remote_console_locale: "en_us"
 
+# Whether or not to allow Locale overrides to be used.
+enable_locale_overrides: true
+
 # Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
 failsafe_message: "The requested message could not be loaded."
 
 debug:
+  # Whether or not to test Locales against regex in commands. Leave enabled.
+  command_regex_locale_tests: true
+
   # Whether or not to test Locales against regex for API calls. Leave disabled for deployed builds but enabled for dev.
   api_regex_locale_tests: false
 

@@ -21,6 +21,7 @@ public class LanguageHandler {
 
     private final Map<String, Language> languageMap;
     private final List<NamespacedKey> keys;
+    private final List<String> locales; // Cache
     private final Language defaultLanguage; // Cache
 
     /**
@@ -43,8 +44,11 @@ public class LanguageHandler {
         this.plugin = plugin;
         languageMap = new HashMap<>();
         keys = new ArrayList<>();
+        locales = new ArrayList<>();
+
         defaultLanguage = new Language(plugin, defaultLocale);
         languageMap.put(defaultLocale, defaultLanguage);
+        locales.add(defaultLocale);
     }
 
     /**
@@ -189,6 +193,7 @@ public class LanguageHandler {
             } else {
                 language = new Language(plugin, locale);
                 languageMap.put(locale, language);
+                this.locales.add(locale);
             }
 
             if (language.containsMessage(messageKey)) {
@@ -230,5 +235,35 @@ public class LanguageHandler {
         }
 
         return new NamespacedKey(plugin, keyLowerCase);
+    }
+
+    /**
+     * Returns whether a given Locale String is registered.
+     *
+     * @param locale Locale String to check.
+     * @return True if locales List contains the given Locale String, false otherwise.
+     * @throws NullPointerException  if locale is null.
+     * @throws LocaleFormatException if API Locale Tests are enabled and locale has an invalid format.
+     * @since 1.0.0
+     */
+    public boolean isLocaleRegistered(@Nonnull String locale)
+    {
+        Objects.requireNonNull(locale, "Locale cannot be null.");
+
+        if (plugin.getConfiguration().API_REGEX_LOCALE_TESTS)
+            ValidationUtil.validateLocale(locale);
+
+        return locales.contains(locale);
+    }
+
+    /**
+     * Returns a copy of the Locales List.
+     *
+     * @return A copy of the Locales list.
+     * @since 1.0.0
+     */
+    public List<String> getRegisteredLocales()
+    {
+        return new ArrayList<>(locales);
     }
 }

@@ -4,7 +4,7 @@
 
     <groupId>com.hippout</groupId>
     <artifactId>HippOutLocalizationLib</artifactId>
-    <version>0.9.1-SNAPSHOT-1.16.5</version>
+    <version>0.10.0-SNAPSHOT-1.16.5</version>
     <packaging>jar</packaging>
 
     <name>HippOutLocalizationLib</name>
@@ -68,12 +68,12 @@
                     <jarOutputDirectory>${project.build.javadocOutputDir}</jarOutputDirectory>
                     <tags>
                         <tag>
-                            <name>apiNote</name>
+                            <name>api.Note</name>
                             <placement>a</placement>
-                            <head>Additional API notes. Why doesn't this work by default?</head>
+                            <head>Additional API notes:</head>
                         </tag>
                         <tag>
-                            <name>enumValue</name>
+                            <name>enum.Value</name>
                             <placement>t</placement>
                             <head>Value descriptor for enums.</head>
                         </tag>
@@ -120,12 +120,12 @@
                     <jarOutputDirectory>${project.build.javadocOutputDir}</jarOutputDirectory>
                     <tags>
                         <tag>
-                            <name>apiNote</name>
+                            <name>api.Note</name>
                             <placement>a</placement>
-                            <head>Additional API notes. Why doesn't this work by default?</head>
+                            <head>Additional API notes:</head>
                         </tag>
                         <tag>
-                            <name>enumValue</name>
+                            <name>enum.Value</name>
                             <placement>t</placement>
                             <head>Value descriptor for enums.</head>
                         </tag>

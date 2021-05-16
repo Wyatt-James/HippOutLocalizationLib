@@ -64,7 +64,7 @@ public class LanguageLoader {
         if (fileName.isEmpty()) throw new IllegalArgumentException("File Name cannot be empty.");
 
         final Logger logger = plugin.getLogger();
-        final YamlConfiguration fc = loadLanguageConfig(fileName + ".yml");
+        final YamlConfiguration fc = loadLanguageConfig(fileName);
 
         final String[] locales = fc.getStringList("config.locales").toArray(new String[0]);
         final boolean suppressSectionWarnings = fc.getBoolean("suppress_section_warnings", false);

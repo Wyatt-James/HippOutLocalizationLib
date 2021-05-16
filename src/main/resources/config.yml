@@ -1,7 +1,7 @@
 config_version: "0.0.1"
 
 # List of language files to load from the languages configuration sub-folder.
-language_files: [ en ]
+language_files: [ en.yml ]
 
 # Whether or not to allow Locale Overrides to be used.
 enable_locale_overrides: true

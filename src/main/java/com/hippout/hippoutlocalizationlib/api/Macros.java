@@ -44,7 +44,7 @@ public class Macros {
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
         MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
@@ -108,7 +108,7 @@ public class Macros {
 
         final Map<String, String> messageMap = new HashMap<>();
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
 
         // Cache console language here because it's faster than finding the same message twice later.
         MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
@@ -251,7 +251,7 @@ public class Macros {
         String locale;
 
         if (commandSender instanceof Player)
-            locale = plugin.getPlayerLocaleCache().getLocale(((Player) commandSender).getUniqueId());
+            locale = plugin.getLocaleCache().getLocale(((Player) commandSender).getUniqueId());
 
         else if (commandSender instanceof ConsoleCommandSender)
             locale = plugin.getConfiguration().CONSOLE_LOCALE;
@@ -288,7 +288,7 @@ public class Macros {
         String locale;
 
         if (commandSender instanceof Player)
-            locale = plugin.getPlayerLocaleCache().getLocaleNoOverride(((Player) commandSender).getUniqueId());
+            locale = plugin.getLocaleCache().getLocaleNoOverride(((Player) commandSender).getUniqueId());
 
         else if (commandSender instanceof ConsoleCommandSender)
             locale = plugin.getConfiguration().CONSOLE_LOCALE;

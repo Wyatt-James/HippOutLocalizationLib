@@ -63,6 +63,7 @@ public class LanguageHandler {
      * @throws NullPointerException  if MessageKey or Locale is null.
      * @throws LocaleFormatException if locale is an invalid format and config.yml/api_regex_locale_tests is
      *                               enabled.
+     * @since 1.0.0
      */
     @Nonnull
     public MessageReturnWrapper getLocalizedMessage(@Nonnull String locale, @Nonnull NamespacedKey messageKey)
@@ -114,7 +115,9 @@ public class LanguageHandler {
      * @param messageKey Key corresponding to the desired message ID.
      * @return A MessageReturnWrapper containing the desired String.
      * @throws NullPointerException if MessageKey is null.
+     * @since 1.0.0
      */
+    @Nonnull
     public MessageReturnWrapper getDefaultLanguageMessage(@Nonnull NamespacedKey messageKey)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -146,7 +149,9 @@ public class LanguageHandler {
      * @param messageKey Key corresponding to the desired message ID.
      * @return A MessageReturnWrapper containing the desired String.
      * @throws NullPointerException if MessageKey is null.
+     * @since 1.0.0
      */
+    @Nonnull
     public MessageReturnWrapper getConsoleMessage(@Nonnull NamespacedKey messageKey)
     {
         return getLocalizedMessage(plugin.getConfiguration().CONSOLE_LOCALE, messageKey);
@@ -159,7 +164,9 @@ public class LanguageHandler {
      * @param messageKey Key corresponding to the desired message ID.
      * @return A MessageReturnWrapper containing the desired String.
      * @throws NullPointerException if MessageKey is null.
+     * @since 1.0.0
      */
+    @Nonnull
     public MessageReturnWrapper getRemoteConsoleMessage(@Nonnull NamespacedKey messageKey)
     {
         return getLocalizedMessage(plugin.getConfiguration().REMOTE_CONSOLE_LOCALE, messageKey);
@@ -174,6 +181,7 @@ public class LanguageHandler {
      * @throws NullPointerException     if any parameters are null.
      * @throws LocaleFormatException    if the Locale is not in a valid format and API-layer validation is enabled.
      * @throws IllegalArgumentException if the corresponding Language already has a message with this key.
+     * @since 1.0.0
      */
     public void addLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull String message, @Nonnull String... locales)
     {
@@ -215,6 +223,7 @@ public class LanguageHandler {
      * @return The found or created NamespacedKey.
      * @throws NullPointerException     if Plugin or Key is empty.
      * @throws IllegalArgumentException if Key is empty.
+     * @since 1.0.0
      */
     @Nonnull
     public NamespacedKey getKey(@Nonnull JavaPlugin plugin, @Nonnull String key)

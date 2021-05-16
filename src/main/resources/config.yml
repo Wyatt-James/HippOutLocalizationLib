@@ -3,22 +3,26 @@ config_version: "0.0.1"
 # List of language files to load from the languages configuration sub-folder.
 language_files: [ en ]
 
-# Default fall-back locale for things such as Players.
-default_locale: "en_us"
-
-# Default locale for the console. Will still use default_locale as a fallback if console_locale is lacking any messages.
-# This is a good option for a Spanish-speaking host running an English server, for example.
-console_locale: "en_us"
-
-# Default locale for the remote console. Will still use default_locale as a fallback if console_locale is lacking any
-# messages. This is a good option for a Spanish-speaking host running an English server, for example.
-remote_console_locale: "en_us"
-
-# Whether or not to allow Locale overrides to be used.
+# Whether or not to allow Locale Overrides to be used.
 enable_locale_overrides: true
 
-# Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
-failsafe_message: "The requested message could not be loaded."
+# Whether or not to save Locale Overrides to a file on plugin close and re-load on plugin start.
+save_and_load_locale_overrides_to_file: true
+
+# Various defaults.
+defaults:
+  # Default fall-back locale for things such as Players.
+  default_locale: "en_us"
+  console_locale: "en_us"
+  remote_console_locale: "en_us"
+
+  # Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
+  failsafe_message: "The requested message could not be loaded."
+
+# Various parameters for loading
+loading:
+  # Whether or not to suppress warnings from LanguageLoaders when a non-String argument is found. Usually thrown for sections.
+  suppress_section_warnings: true
 
 debug:
   # Whether or not to test Locales against regex in commands. Leave enabled.

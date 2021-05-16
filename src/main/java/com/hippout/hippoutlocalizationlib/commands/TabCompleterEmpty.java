@@ -14,11 +14,6 @@ import java.util.*;
 public class TabCompleterEmpty implements TabCompleter {
     public static final TabCompleterEmpty INSTANCE = new TabCompleterEmpty();
 
-    /**
-     * Private constructor. Use INSTANCE instead.
-     *
-     * @since 1.0.0
-     */
     private TabCompleterEmpty()
     {
         // Nothing

@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.*;
 import javax.annotation.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * A convenient way to load language files into HippOutLocalizationLib.
@@ -19,10 +20,11 @@ import java.util.*;
  * @author Wyatt Kalmer
  * @since 1.0.0
  */
-@SuppressWarnings("unused")
 public class LanguageLoader {
     private final JavaPlugin plugin;
+    private final boolean suppressSectionWarnings;
     private final String languageDirectoryName;
+    private final String languageDirectory;
 
     /**
      * Constructs a LanguageLoader with the given JavaPlugin as its parent.
@@ -35,11 +37,42 @@ public class LanguageLoader {
      * @api.Note Do NOT use HippOutLocalizationLib when using this as an API. For internal use only.
      * @since 1.0.0
      */
-    public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName)
+    public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName, boolean suppressSectionWarnings)
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
         this.languageDirectoryName = Objects.requireNonNull(languageDirectoryName, "Language Directory Name" +
                 " cannot be null.");
+        this.languageDirectory = plugin.getDataFolder() + File.separator + languageDirectoryName;
+        this.suppressSectionWarnings = suppressSectionWarnings;
+    }
+
+    /**
+     * Loads the requested file from the plugin's specified language directory and adds its messages to
+     * HippOutLocalizationLib with the file's defined Locales.
+     *
+     * @param fileName Language file to load
+     * @return A List of all generated NamespacedKeys which were successfully added to the LanguageHandler.
+     * @throws NullPointerException          if fileName is null.
+     * @throws IllegalArgumentException      if fileName is empty.
+     * @throws IOException                   if config.load fails to load the requested file.
+     * @throws InvalidConfigurationException if config.load can load the requested file but it is not a valid YAML file.
+     * @since 1.0.0
+     */
+    public List<NamespacedKey> loadLanguageFile(@Nonnull String fileName) throws IOException, InvalidConfigurationException
+    {
+        Objects.requireNonNull(fileName, "File Name cannot be null.");
+        if (fileName.isEmpty()) throw new IllegalArgumentException("File Name cannot be empty.");
+
+        final Logger logger = plugin.getLogger();
+        final YamlConfiguration fc = loadLanguageConfig(fileName + ".yml");
+
+        final String[] locales = fc.getStringList("config.locales").toArray(new String[0]);
+        final boolean suppressSectionWarnings = fc.getBoolean("suppress_section_warnings", false);
+
+        final ConfigurationSection messageSection = Objects.requireNonNull(fc.getConfigurationSection("messages"),
+                "ConfigurationSection messageSection could not be found in language file " + fileName);
+
+        return loadLanguage(messageSection, locales);
     }
 
     /**
@@ -52,7 +85,7 @@ public class LanguageLoader {
      * @throws IllegalArgumentException if locales is empty.
      * @since 1.0.0
      */
-    public List<NamespacedKey> loadLanguage(@Nonnull ConfigurationSection languageSection, @Nonnull String... locales)
+    private List<NamespacedKey> loadLanguage(@Nonnull ConfigurationSection languageSection, @Nonnull String... locales)
     {
         Objects.requireNonNull(languageSection, "LanguageSection cannot be null.");
         Objects.requireNonNull(locales, "Locales cannot be null.");
@@ -86,8 +119,9 @@ public class LanguageLoader {
                 languageHandler.addLocalizedMessage(messageKey, message, locales);
                 messageKeys.add(messageKey);
             } else {
-                plugin.getLogger().warning(String.format("Non-message tag in language section %s: %s. Ignoring.",
-                        languageSection.getName(), entry.getKey()));
+                if (!suppressSectionWarnings)
+                    plugin.getLogger().warning(String.format("Non-message tag in language section %s: %s. Ignoring.",
+                            languageSection.getName(), entry.getKey()));
             }
         }
 
@@ -104,27 +138,33 @@ public class LanguageLoader {
      * @throws IllegalArgumentException      if fileName is empty.
      * @throws IOException                   if config.load fails to load the requested file.
      * @throws InvalidConfigurationException if config.load can load the requested file but it is not a valid YAML file.
-     * @api.Note Bukkit only stores one FileConfiguration object per plugin, so loading a language file with this method
-     * will overwrite the previous loaded FileConfiguration. The return is only for convenience and should not imply
-     * any separation.
      * @since 1.0.0
      */
-    public FileConfiguration loadLanguageConfig(@Nonnull String fileName) throws IOException, InvalidConfigurationException
+    private YamlConfiguration loadLanguageConfig(@Nonnull String fileName) throws IOException,
+            InvalidConfigurationException
     {
         Objects.requireNonNull(fileName, "Language Name cannot be null.");
         if (fileName.isEmpty()) throw new IllegalArgumentException("File Name cannot be empty.");
 
-        final FileConfiguration config = plugin.getConfig();
-        final String dataFolderPath = plugin.getDataFolder().getPath();
-        final String languageFilePath;
+        final File configFile = new File(languageDirectory, fileName);
 
-        if (languageDirectoryName.isEmpty())
-            languageFilePath = dataFolderPath + File.separator + fileName;
-        else
-            languageFilePath = dataFolderPath + File.separator + languageDirectoryName + File.separator + fileName;
+        if (!configFile.exists())
+            throw new FileNotFoundException(String.format("Could not find requested file: %s", configFile.getPath()));
 
-        config.load(languageFilePath);
+        final YamlConfiguration languageConfig = new YamlConfiguration();
+        languageConfig.load(configFile); // Load explicitly for exceptions.
 
-        return config;
+        return languageConfig;
+    }
+
+    /**
+     * Returns the JavaPlugin of this LanguageLoader.
+     *
+     * @return The JavaPlugin of this LanguageLoader.
+     * @since 1.0.0
+     */
+    public JavaPlugin getPlugin()
+    {
+        return plugin;
     }
 }

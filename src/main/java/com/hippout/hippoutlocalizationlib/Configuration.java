@@ -36,17 +36,29 @@ public class Configuration {
 
     private static final String DEFAULT_FAILSAFE_MESSAGE = "The requested message could not be loaded.";
 
+    public static final String LOCALE_CACHE_FILE_NAME = "locale_overrides.yml";
+    public static final String LOCALE_CACHE_HEADER = "A Map of UUIDs and their Locale Cache Overrides.";
+
     // --------------- Instance Variables ---------------
 
     private final HippOutLocalizationLib plugin;
 
-    public final boolean ENABLE_LOCALE_OVERRIDES;
-
+    // Root
     public final String CONFIG_VERSION;
-    public final String FAILSAFE_MESSAGE;
-    public final String DEFAULT_LOCALE, CONSOLE_LOCALE, REMOTE_CONSOLE_LOCALE;
+
     private final List<String> LANGUAGE_FILE_DEFINITIONS;
 
+    public final boolean ENABLE_LOCALE_OVERRIDES;
+    public final boolean SAVE_AND_LOAD_LOCALE_OVERRIDES;
+
+    // Defaults
+    public final String DEFAULT_LOCALE, CONSOLE_LOCALE, REMOTE_CONSOLE_LOCALE;
+    public final String FAILSAFE_MESSAGE;
+
+    // Loading
+    final boolean SUPPRESS_SECTION_WARNINGS;
+
+    // Debug
     public final boolean API_REGEX_LOCALE_TESTS;
     public final boolean INTERNAL_REGEX_LOCALE_TESTS;
     public final boolean REMOVE_DISCONNECTED_PLAYER_LOCALES;
@@ -57,6 +69,7 @@ public class Configuration {
      * @param plugin HippOutLocalizationLib instance.
      * @throws NullPointerException          if plugin is null.
      * @throws IllegalStateException         if config_version is in an invalid format.
+     * @throws IllegalStateException         if SAVE_LOCALE_OVERRIDES is true but ENABLE_LOCALE_OVERRIDES is false.
      * @throws LocaleFormatException         if any of the Locales in config.yml have an invalid format.
      * @throws IOException                   if Bukkit fails to reload the default configuration file config.yml.
      * @throws InvalidConfigurationException if config.yml is not in valid YAML format.
@@ -71,15 +84,27 @@ public class Configuration {
         loadConfigFile(); // Exceptions can be thrown here.
 
         final FileConfiguration rootConfig = this.plugin.getConfig();
-        final ConfigurationSection debugConfig = rootConfig.getConfigurationSection("debug");
+        final ConfigurationSection defaultsSection = rootConfig.getConfigurationSection("defaults");
+        final ConfigurationSection loadingSection = rootConfig.getConfigurationSection("loading");
+        final ConfigurationSection debugSection = rootConfig.getConfigurationSection("debug");
 
         // Load config_version
         CONFIG_VERSION = Objects.requireNonNull(rootConfig.getString("config_version"), ERR_CONFIG_NOT_FOUND);
         if (!VERSION_PATTERN.matcher(CONFIG_VERSION).matches())
             throw new IllegalStateException(ERR_CONFIG_INVALID_FORMAT);
 
+        LANGUAGE_FILE_DEFINITIONS = Objects.requireNonNull(rootConfig.getStringList("language_files"), "Language File" +
+                " Definitons cannot be null.");
+
+        ENABLE_LOCALE_OVERRIDES = rootConfig.getBoolean("enable_locale_overrides");
+        SAVE_AND_LOAD_LOCALE_OVERRIDES = rootConfig.getBoolean("save_and_load_locale_overrides_to_file");
+
+        if (SAVE_AND_LOAD_LOCALE_OVERRIDES && !ENABLE_LOCALE_OVERRIDES)
+            throw new IllegalStateException("Cannot have Locale Override saving enabled while Locale Overrides are " +
+                    "disabled.");
+
         // Load failsafe_message
-        String failsafeMessage = rootConfig.getString("failsafe_message");
+        String failsafeMessage = defaultsSection.getString("failsafe_message");
         if (failsafeMessage == null) {
             failsafeMessage = DEFAULT_FAILSAFE_MESSAGE;
             plugin.getLogger().log(Level.WARNING, ERR_FAILSAFE_MESSAGE_NOT_FOUND);
@@ -87,18 +112,16 @@ public class Configuration {
 
         FAILSAFE_MESSAGE = failsafeMessage;
 
-        LANGUAGE_FILE_DEFINITIONS = rootConfig.getStringList("language_files");
-
         // Load default and console Locales
-        DEFAULT_LOCALE = loadLocale(rootConfig, "default_locale");
-        CONSOLE_LOCALE = loadLocale(rootConfig, "console_locale");
-        REMOTE_CONSOLE_LOCALE = loadLocale(rootConfig, "remote_console_locale");
+        DEFAULT_LOCALE = loadLocale(defaultsSection, "default_locale");
+        CONSOLE_LOCALE = loadLocale(defaultsSection, "console_locale");
+        REMOTE_CONSOLE_LOCALE = loadLocale(defaultsSection, "remote_console_locale");
 
-        ENABLE_LOCALE_OVERRIDES = rootConfig.getBoolean("enable_locale_overrides");
+        SUPPRESS_SECTION_WARNINGS = loadingSection.getBoolean("suppress_section_warnings");
 
-        API_REGEX_LOCALE_TESTS = debugConfig.getBoolean("api_regex_locale_tests", false);
-        INTERNAL_REGEX_LOCALE_TESTS = debugConfig.getBoolean("internal_regex_locale_tests", false);
-        REMOVE_DISCONNECTED_PLAYER_LOCALES = debugConfig.getBoolean("remove_disconnected_player_locales", true);
+        API_REGEX_LOCALE_TESTS = debugSection.getBoolean("api_regex_locale_tests", false);
+        INTERNAL_REGEX_LOCALE_TESTS = debugSection.getBoolean("internal_regex_locale_tests", false);
+        REMOVE_DISCONNECTED_PLAYER_LOCALES = debugSection.getBoolean("remove_disconnected_player_locales", true);
     }
 
     /**
@@ -106,6 +129,7 @@ public class Configuration {
      *
      * @return A copy of the List of Language File Definitions.
      */
+    @Nonnull
     public List<String> getLanguageFileDefinitions()
     {
         return new ArrayList<>(LANGUAGE_FILE_DEFINITIONS);
@@ -114,29 +138,25 @@ public class Configuration {
     /**
      * Helper method for loading a Locale.
      *
-     * <p>
-     * Technically checks varName for null twice but it's not really an issue.
-     * </p>
-     *
      * @param configurationSection FileConfiguration containing the Locale String in its top level.
-     * @param varName              Locale Variable Name in the FileConfiguration.
+     * @param key                  Locale Variable Name in the FileConfiguration.
      * @return The verified Locale.
-     * @throws NullPointerException  if configurationSection or varName is null.
+     * @throws NullPointerException  if configurationSection or key is null.
      * @throws NullPointerException  if the requested variable could not be found.
      * @throws LocaleFormatException if the requested variable was not a valid Locale as per the regex in
      *                               ValidationUtil.
      * @since 1.0.0
      */
     @Nonnull
-    private static String loadLocale(@Nonnull ConfigurationSection configurationSection, @Nonnull String varName)
+    public static String loadLocale(@Nonnull ConfigurationSection configurationSection, @Nonnull String key)
     {
         Objects.requireNonNull(configurationSection, "ConfigurationSection cannot be null.");
-        Objects.requireNonNull(varName, "Variable Name cannot be null.");
+        Objects.requireNonNull(key, "Key cannot be null.");
 
-        final String locale = Objects.requireNonNull(configurationSection.getString(varName),
-                String.format(ERR_LOCALE_NOT_FOUND, varName));
+        final String locale = Objects.requireNonNull(configurationSection.getString(key),
+                String.format(ERR_LOCALE_NOT_FOUND, key));
 
-        ValidationUtil.validateLocale(locale, String.format(ERR_LOCALE_INVALID_FORMAT, varName)
+        ValidationUtil.validateLocale(locale, String.format(ERR_LOCALE_INVALID_FORMAT, key)
                 + " Yours: %s");
 
         return locale;

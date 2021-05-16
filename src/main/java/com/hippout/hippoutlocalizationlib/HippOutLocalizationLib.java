@@ -34,15 +34,82 @@ public class HippOutLocalizationLib extends JavaPlugin {
 
     private EventListener eventListener;
 
-    /**
-     * Returns the Key Registry of the current HippOutLocalizationLib instance.
-     *
-     * @return The Key Registry of the current HippOutLocalizationLib instance.
-     * @since 1.0.0
-     */
-    public static KeyRegistry getKeyRegistry()
+    @Override
+    public void onEnable()
     {
-        return instance.keyRegistry;
+        getLogger().info("HippOutLocalizationLib has been enabled.");
+
+        instance = this;
+        saveDefaultConfig();
+        saveResource("languages" + File.separator + "en.yml", false);
+
+        try {
+            this.configuration = new Configuration(this);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Configuration file config.yml. Plugin load failed. " +
+                    "Contact the plugin vendor for assistance.");
+        }
+
+        this.languageHandler = new LanguageHandler(this, configuration.DEFAULT_LOCALE);
+
+        this.localeCache = new LocaleCache(this, Bukkit.getOnlinePlayers());
+        if (configuration.SAVE_AND_LOAD_LOCALE_OVERRIDES)
+            loadLocaleCacheFromDisk(Configuration.LOCALE_CACHE_FILE_NAME);
+
+        this.eventListener = new EventListener(this);
+
+        getServer().getPluginManager().registerEvents(this.eventListener, this);
+
+        LanguageLoader languageLoader = new LanguageLoader(this, "languages",
+                configuration.SUPPRESS_SECTION_WARNINGS);
+
+        for (String fileName : configuration.getLanguageFileDefinitions()) {
+            try {
+                languageLoader.loadLanguageFile(fileName);
+            } catch (IOException e) {
+                getLogger().warning(fileName + " could not be found or loaded inside the languages directory.");
+                e.printStackTrace();
+            } catch (InvalidConfigurationException e) {
+                getLogger().warning(fileName + " was not a valid YAML configuration file.");
+                e.printStackTrace();
+            }
+        }
+
+        keyRegistry = new KeyRegistry();
+
+        final PluginCommand pCommandSetLocaleOverride = getCommand("setlocaleoverride");
+        final PluginCommand pCommandRemoveLocaleOverride = getCommand("removelocaleoverride");
+
+        if (configuration.ENABLE_LOCALE_OVERRIDES) {
+            final CommandSetLocaleOverride commandSetLocaleOverride = new CommandSetLocaleOverride();
+            pCommandSetLocaleOverride.setExecutor(commandSetLocaleOverride);
+            pCommandSetLocaleOverride.setTabCompleter(commandSetLocaleOverride);
+
+
+            final CommandRemoveLocaleOverride commandRemoveLocaleOverride = new CommandRemoveLocaleOverride();
+            pCommandRemoveLocaleOverride.setExecutor(commandRemoveLocaleOverride);
+            pCommandRemoveLocaleOverride.setTabCompleter(commandRemoveLocaleOverride);
+        } else {
+            pCommandSetLocaleOverride.setExecutor(DisabledCommand.instance);
+            pCommandSetLocaleOverride.setTabCompleter(TabCompleterEmpty.INSTANCE);
+
+            pCommandRemoveLocaleOverride.setExecutor(DisabledCommand.instance);
+            pCommandRemoveLocaleOverride.setTabCompleter(TabCompleterEmpty.INSTANCE);
+        }
+
+        final PluginCommand pCommandLocale = getCommand("locale");
+        final CommandLocale commandLocale = new CommandLocale();
+        pCommandLocale.setExecutor(commandLocale);
+        pCommandLocale.setTabCompleter(commandLocale);
+    }
+
+    @Override
+    public void onDisable()
+    {
+        getLogger().info("HippOutLocalizationLib has been disabled.");
+
+        if (configuration.SAVE_AND_LOAD_LOCALE_OVERRIDES)
+            saveLocaleCacheToDisk(Configuration.LOCALE_CACHE_FILE_NAME);
     }
 
     @Override
@@ -51,10 +118,115 @@ public class HippOutLocalizationLib extends JavaPlugin {
         // Nothing
     }
 
-    @Override
-    public void onDisable()
+    // --------------- Helpers ---------------
+
+    /**
+     * Saves the LocaleCache to disk.
+     *
+     * @param localeCacheFileName File Name to save to.
+     * @throws NullPointerException  if localeCacheFileName is null.
+     * @throws IllegalStateException if localeCacheFileName is empty.
+     * @since 1.0.0
+     */
+    private void saveLocaleCacheToDisk(@Nonnull String localeCacheFileName)
     {
-        getLogger().info("HippOutLocalizationLib has been disabled.");
+        Objects.requireNonNull(localeCacheFileName, "Locale Cache File Name cannot be null.");
+        if (localeCacheFileName.isEmpty())
+            throw new IllegalArgumentException("Locale Cache File Name cannot be empty.");
+
+        getLogger().info(String.format("Attempting to save Locale Cache to file %s.", localeCacheFileName));
+
+        // Load File
+        final File configFile = new File(getDataFolder(), localeCacheFileName);
+
+        boolean exists = configFile.exists();
+        if (!exists) {
+            try {
+                configFile.createNewFile();
+                exists = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (exists) {
+            if (configFile.canRead() && configFile.canWrite()) {
+                final YamlConfiguration localeCacheConfig = YamlConfiguration.loadConfiguration(configFile);
+                localeCacheConfig.options().header(Configuration.LOCALE_CACHE_HEADER);
+                localeCache.writeOverrides(localeCacheConfig);
+
+                try {
+                    localeCacheConfig.save(configFile);
+                } catch (IOException e) {
+                    getLogger().warning(String.format("Could not save Player Locale Overrides to file %s", localeCacheFileName));
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            getLogger().warning(String.format("Could not find or create config file %s. Saving Locale Cache " +
+                    "aborted.", localeCacheFileName));
+        }
+    }
+
+    /**
+     * Loads the LocaleCache from disk.
+     *
+     * @param localeCacheFileName File Name to load from.
+     * @throws NullPointerException  if localeCacheFileName is null.
+     * @throws IllegalStateException if localeCacheFileName is empty.
+     * @since 1.0.0
+     */
+    private void loadLocaleCacheFromDisk(@Nonnull String localeCacheFileName)
+    {
+        Objects.requireNonNull(localeCacheFileName, "Locale Cache File Name cannot be null.");
+        if (localeCacheFileName.isEmpty())
+            throw new IllegalArgumentException("Locale Cache File Name cannot be empty.");
+
+        getLogger().info(String.format("Attempting to load Locale Cache from file %s.", localeCacheFileName));
+
+        // Load file
+        final File configFile = new File(getDataFolder(), localeCacheFileName);
+
+        boolean exists = configFile.exists();
+        if (!exists) {
+            try {
+                configFile.createNewFile();
+                exists = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (exists) {
+            try {
+                final YamlConfiguration localeCacheConfig = new YamlConfiguration();
+                localeCacheConfig.load(configFile); // Load explicitly for exceptions.
+
+                this.localeCache.loadOverrides(localeCacheConfig);
+            } catch (IOException | InvalidConfigurationException e) {
+                getLogger().warning(String.format("Could not load Player Locale Overrides from file %s",
+                        localeCacheFileName));
+                e.printStackTrace();
+            }
+        } else {
+            getLogger().warning(String.format("Could not find or create config file %s. Loading Locale Cache " +
+                    "aborted.", localeCacheFileName));
+        }
+    }
+
+
+    // --------------- Getters and Setters ---------------
+
+    /**
+     * Returns the KeyRegistry of the current HippOutLocalizationLib instance.
+     *
+     * @return The KeyRegistry of the current HippOutLocalizationLib instance.
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static KeyRegistry getKeyRegistry()
+    {
+        return instance.keyRegistry;
     }
 
     /**
@@ -100,81 +272,8 @@ public class HippOutLocalizationLib extends JavaPlugin {
      * @since 1.0.0
      */
     @Nonnull
-    public LocaleCache getPlayerLocaleCache()
+    public LocaleCache getLocaleCache()
     {
         return localeCache;
-    }
-
-    @Override
-    public void onEnable()
-    {
-        getLogger().info("HippOutLocalizationLib has been enabled.");
-
-        instance = this;
-        saveDefaultConfig();
-        saveResource("languages" + File.separator + "en.yml", false);
-
-        try {
-            this.configuration = new Configuration(this);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to load Configuration file config.yml. Plugin load failed. " +
-                    "Contact the plugin vendor for assistance.");
-        }
-
-        this.languageHandler = new LanguageHandler(this, configuration.DEFAULT_LOCALE);
-        this.localeCache = new LocaleCache(this, Bukkit.getOnlinePlayers());
-        this.eventListener = new EventListener(this);
-
-        getServer().getPluginManager().registerEvents(this.eventListener, this);
-
-        LanguageLoader languageLoader = new LanguageLoader(this, "languages");
-
-        for (String language : configuration.getLanguageFileDefinitions()) {
-            try {
-                final FileConfiguration fc = languageLoader.loadLanguageConfig(language + ".yml");
-                final String[] aliases = fc.getStringList("config.aliases").toArray(new String[0]);
-                final ConfigurationSection messageSection = Objects.requireNonNull(fc.getConfigurationSection(
-                        "messages"), "ConfigurationSection messageSection could not be found in language" +
-                        " file " + language);
-
-                languageLoader.loadLanguage(messageSection, aliases);
-            } catch (IOException e) {
-                getLogger().warning(language + " could not be found inside the languages directory.");
-                e.printStackTrace();
-            } catch (InvalidConfigurationException e) {
-                getLogger().warning(language + " was not a valid YAML configuration file.");
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                getLogger().warning(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        keyRegistry = new KeyRegistry();
-
-        final PluginCommand pCommandSetLocaleOverride = getCommand("setlocaleoverride");
-        final PluginCommand pCommandRemoveLocaleOverride = getCommand("removelocaleoverride");
-
-        if (configuration.ENABLE_LOCALE_OVERRIDES) {
-            final CommandSetLocaleOverride commandSetLocaleOverride = new CommandSetLocaleOverride();
-            pCommandSetLocaleOverride.setExecutor(commandSetLocaleOverride);
-            pCommandSetLocaleOverride.setTabCompleter(commandSetLocaleOverride);
-
-
-            final CommandRemoveLocaleOverride commandRemoveLocaleOverride = new CommandRemoveLocaleOverride();
-            pCommandRemoveLocaleOverride.setExecutor(commandRemoveLocaleOverride);
-            pCommandRemoveLocaleOverride.setTabCompleter(commandRemoveLocaleOverride);
-        } else {
-            pCommandSetLocaleOverride.setExecutor(DisabledCommand.instance);
-            pCommandSetLocaleOverride.setTabCompleter(TabCompleterEmpty.INSTANCE);
-
-            pCommandRemoveLocaleOverride.setExecutor(DisabledCommand.instance);
-            pCommandRemoveLocaleOverride.setTabCompleter(TabCompleterEmpty.INSTANCE);
-        }
-
-        final PluginCommand pCommandLocale = getCommand("locale");
-        final CommandLocale commandLocale = new CommandLocale();
-        pCommandLocale.setExecutor(commandLocale);
-        pCommandLocale.setTabCompleter(commandLocale);
     }
 }

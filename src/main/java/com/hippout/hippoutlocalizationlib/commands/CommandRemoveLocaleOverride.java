@@ -49,7 +49,7 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
             return true;
         }
 
-        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
         if (!localeCache.hasLocaleOverride(id)) {
             Macros.sendLocalizedMessage(ERROR_NO_OVERRIDE, sender, targetArg.substring(2));
             return true;

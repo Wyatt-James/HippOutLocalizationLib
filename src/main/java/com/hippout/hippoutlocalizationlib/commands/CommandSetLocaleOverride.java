@@ -60,7 +60,7 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        HippOutLocalizationLib.getPlugin().getPlayerLocaleCache().setLocaleOverride(id, localeArg);
+        HippOutLocalizationLib.getPlugin().getLocaleCache().setLocaleOverride(id, localeArg);
         Macros.sendLocalizedMessage(SUCCESS, sender, targetArg.substring(2), localeArg);
         return true;
     }

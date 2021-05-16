@@ -52,7 +52,7 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         }
 
         final String targetArgShort = targetArg.substring(2);
-        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getPlayerLocaleCache();
+        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
         try {
             final String locale = localeCache.getLocale(id);
 

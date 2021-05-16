@@ -123,6 +123,7 @@ class NullMap<K, V> implements Map<K, V> {
      * @return an empty Set.
      */
     @Override
+    @Nonnull
     public Set<K> keySet()
     {
         return Collections.emptySet();
@@ -135,6 +136,7 @@ class NullMap<K, V> implements Map<K, V> {
      * @return an empty Collection.
      */
     @Override
+    @Nonnull
     public Collection<V> values()
     {
         return Collections.emptyList();
@@ -146,6 +148,7 @@ class NullMap<K, V> implements Map<K, V> {
      * @return an empty Set.
      */
     @Override
+    @Nonnull
     public Set<Entry<K, V>> entrySet()
     {
         return Collections.emptySet();

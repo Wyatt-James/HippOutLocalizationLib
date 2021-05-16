@@ -39,7 +39,7 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        plugin.getPlayerLocaleCache().setLocale(event.getPlayer().getUniqueId(), event.getPlayer().getLocale());
+        plugin.getLocaleCache().setLocale(event.getPlayer().getUniqueId(), event.getPlayer().getLocale());
         plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_CHANGED,
                 event.getPlayer().getName(), event.getPlayer().getLocale()));
     }
@@ -53,7 +53,7 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
     {
-        plugin.getPlayerLocaleCache().setLocale(event.getPlayer().getUniqueId(), event.getLocale());
+        plugin.getLocaleCache().setLocale(event.getPlayer().getUniqueId(), event.getLocale());
         plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_CHANGED, event.getPlayer().getName(), event.getLocale()));
     }
 
@@ -68,7 +68,7 @@ public class EventListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event)
     {
         if (plugin.getConfiguration().REMOVE_DISCONNECTED_PLAYER_LOCALES) {
-            plugin.getPlayerLocaleCache().removeLocale(event.getPlayer().getUniqueId());
+            plugin.getLocaleCache().removeLocale(event.getPlayer().getUniqueId());
             plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_REMOVED, event.getPlayer().getName()));
         }
     }

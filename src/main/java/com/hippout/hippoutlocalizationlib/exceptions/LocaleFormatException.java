@@ -6,7 +6,7 @@ package com.hippout.hippoutlocalizationlib.exceptions;
  * @author Wyatt Kalmer
  * @since 1.0.0
  */
-public class LocaleFormatException extends IllegalArgumentException {
+public class LocaleFormatException extends RuntimeException {
 
     /**
      * Constructs a LocaleFormatException with the specified detail message.

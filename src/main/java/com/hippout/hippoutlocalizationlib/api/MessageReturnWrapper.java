@@ -80,6 +80,12 @@ public class MessageReturnWrapper {
         return messageType;
     }
 
+    /**
+     * Returns the Message.
+     *
+     * @return The Message.
+     * @since 1.0.0
+     */
     @Override
     public String toString()
     {

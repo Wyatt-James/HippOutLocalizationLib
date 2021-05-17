@@ -19,13 +19,13 @@ import java.util.regex.*;
 public class TargetArgs {
     public static final String TARGET_ARG_REGEX_PLAYER = "^(p):([0-9A-Za-z_]{3,16}$)";
     public static final Pattern TARGET_ARG_PATTERN_PLAYER = Pattern.compile(TARGET_ARG_REGEX_PLAYER);
+
     public static final String TARGET_ARG_REGEX_UUID = "^(u):(([0-9a-z]{32})|([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-" +
             "[0-9a-z]{4}-[0-9a-z]{12}))$";
     public static final Pattern TARGET_ARG_PATTERN_UUID = Pattern.compile(TARGET_ARG_REGEX_UUID);
+
     static final List<String> TARGET_TYPES_SUGGESTIONS = new ArrayList<>();
-    private static final List<String> TARGET_TYPES = new ArrayList<>(
-            Arrays.asList("p", "u")
-    );
+    private static final List<String> TARGET_TYPES = new ArrayList<>(Arrays.asList("p", "u"));
 
     static {
         TARGET_TYPES.forEach(targetType -> TARGET_TYPES_SUGGESTIONS.add(targetType + ":"));

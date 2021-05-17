@@ -20,6 +20,11 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
 
     private final NamespacedKey USAGE, SUCCESS, SUCCESS_OVERRIDE, NO_LOCALE;
 
+    /**
+     * Constructs a CommandLocale.
+     *
+     * @since 1.0.0
+     */
     public CommandLocale()
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
@@ -30,6 +35,15 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         NO_LOCALE = keyRegistry.COM_LOCALE_NO_LOCALE;
     }
 
+    /**
+     * Called when the Command is executed.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param args    Arguments.
+     * @return True. False would print plugin.yml/usage
+     * @since 1.0.0
+     */
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
@@ -63,6 +77,16 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    /**
+     * Handles Tab-completion.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param alias   Alias String.
+     * @param args    Arguments.
+     * @return A List of Tab Completions.
+     * @since 1.0.0
+     */
     @Override
     public List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String alias,
                                       @Nonnull String[] args)

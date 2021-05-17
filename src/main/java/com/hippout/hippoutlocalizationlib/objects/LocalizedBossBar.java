@@ -156,6 +156,8 @@ public class LocalizedBossBar implements BossBar, Listener {
 
     /**
      * Convenience method. Registers all events associated with this Extension
+     *
+     * @since 1.0.0
      */
     protected void registerEvents()
     {
@@ -165,6 +167,8 @@ public class LocalizedBossBar implements BossBar, Listener {
 
     /**
      * Convenience method. Unregisters all events associated with this Extension
+     *
+     * @since 1.0.0
      */
     protected void unregisterEvents()
     {
@@ -244,6 +248,12 @@ public class LocalizedBossBar implements BossBar, Listener {
 
     // --------------- Overridden methods ---------------
 
+    /**
+     * Returns the Color of this LocalizedBossBar.
+     *
+     * @return The Color of this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     @Nonnull
     public BarColor getColor()
@@ -251,6 +261,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         return dummy.getColor();
     }
 
+    /**
+     * Sets the Color of this LocalizedBossBar.
+     *
+     * @param color New Color for this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     public void setColor(@Nonnull BarColor color)
     {
@@ -258,6 +274,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBars.forEach(b -> b.setColor(color));
     }
 
+    /**
+     * Returns the Style of this LocalizedBossBar.
+     *
+     * @return The Style of this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     @Nonnull
     public BarStyle getStyle()
@@ -265,6 +287,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         return dummy.getStyle();
     }
 
+    /**
+     * Sets the Style of this LocalizedBossBar.
+     *
+     * @param style Style to set this LocalizedBossBar to.
+     * @since 1.0.0
+     */
     @Override
     public void setStyle(@Nonnull BarStyle style)
     {
@@ -272,6 +300,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBars.forEach(b -> setStyle(style));
     }
 
+    /**
+     * Removes a flag from this LocalizedBossBar.
+     *
+     * @param flag Existing flag to remove.
+     * @since 1.0.0
+     */
     @Override
     public void removeFlag(@Nonnull BarFlag flag)
     {
@@ -280,6 +314,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         this.barFlags = getWithout(this.barFlags, flag);
     }
 
+    /**
+     * Adds a flag to this LocalizedBossBar.
+     *
+     * @param flag Flag to add.
+     * @since 1.0.0
+     */
     @Override
     public void addFlag(@Nonnull BarFlag flag)
     {
@@ -291,12 +331,25 @@ public class LocalizedBossBar implements BossBar, Listener {
         barFlags = newFlags;
     }
 
+    /**
+     * Returns whether this LocalziedBossBar has a given flag set.
+     *
+     * @param flag Flag to check
+     * @return True if the flag is set, false otherwise.
+     * @since 1.0.0
+     */
     @Override
     public boolean hasFlag(@Nonnull BarFlag flag)
     {
         return dummy.hasFlag(flag);
     }
 
+    /**
+     * Sets the progress of this LocalizedBossBar.
+     *
+     * @param progress the new progress for this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     public void setProgress(double progress)
     {
@@ -304,12 +357,24 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBars.forEach(b -> b.setProgress(progress));
     }
 
+    /**
+     * Returns the progress of this LocalizedBossBar.
+     *
+     * @return The progress of this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     public double getProgress()
     {
         return dummy.getProgress();
     }
 
+    /**
+     * Adds the given Player to this LocalizedBossBar.
+     *
+     * @param player Player to add.
+     * @since 1.0.0
+     */
     @Override
     public void addPlayer(@Nonnull Player player)
     {
@@ -323,6 +388,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBarMap.get(locale).addPlayer(player);
     }
 
+    /**
+     * Removes the given Player from this LocalizedBossBar.
+     *
+     * @param player Player to remove.
+     * @since 1.0.0
+     */
     @Override
     public void removePlayer(@Nonnull Player player)
     {
@@ -330,6 +401,11 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBarMap.get(HippOutLocalizationLib.getPlugin().getLocaleCache().getLocale(player.getUniqueId())).removePlayer(player);
     }
 
+    /**
+     * Removes all Players from this LocalizedBossBar.
+     *
+     * @since 1.0.0
+     */
     @Override
     public void removeAll()
     {
@@ -337,6 +413,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBars.forEach(BossBar::removeAll);
     }
 
+    /**
+     * Returns a List of Players currently held by this LocalizedBossBar.
+     *
+     * @return a List of Players currently held by this LocalizedBossBar.
+     * @since 1.0.0
+     */
     @Override
     @Nonnull
     public List<Player> getPlayers()
@@ -344,6 +426,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         return dummy.getPlayers();
     }
 
+    /**
+     * Sets whether this LocalizedBossBar is visible.
+     *
+     * @param visible Whether or not to be visible.
+     * @since 1.0.0
+     */
     @Override
     public void setVisible(boolean visible)
     {
@@ -351,6 +439,12 @@ public class LocalizedBossBar implements BossBar, Listener {
         bossBars.forEach(b -> b.setVisible(visible));
     }
 
+    /**
+     * Returns whether this LocalizedBossBar is visible.
+     *
+     * @return whether this LocalizedBossBar is visible.
+     * @since 1.0.0
+     */
     @Override
     public boolean isVisible()
     {

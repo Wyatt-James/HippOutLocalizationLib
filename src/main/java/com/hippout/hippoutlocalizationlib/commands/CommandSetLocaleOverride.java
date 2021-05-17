@@ -21,6 +21,11 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
 
     private final NamespacedKey USAGE, SUCCESS, INVALID_FORMAT_LOCALE;
 
+    /**
+     * Constructs a CommandSetLocaleOverride.
+     *
+     * @since 1.0.0
+     */
     public CommandSetLocaleOverride()
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
@@ -31,6 +36,15 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
         INVALID_FORMAT_LOCALE = keyRegistry.INVALID_FORMAT_LOCALE;
     }
 
+    /**
+     * Called when the Command is executed.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param args    Arguments.
+     * @return True. False would print plugin.yml/usage
+     * @since 1.0.0
+     */
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
@@ -65,6 +79,16 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    /**
+     * Handles Tab-completion.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param alias   Alias String.
+     * @param args    Arguments.
+     * @return A List of Tab Completions.
+     * @since 1.0.0
+     */
     @Override
     public List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String alias,
                                       @Nonnull String[] args)

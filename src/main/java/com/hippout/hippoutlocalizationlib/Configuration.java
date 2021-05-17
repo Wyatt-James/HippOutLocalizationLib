@@ -128,6 +128,7 @@ public class Configuration {
      * Gets a List of Language File definitions.
      *
      * @return A copy of the List of Language File Definitions.
+     * @since 1.0.0
      */
     @Nonnull
     public List<String> getLanguageFileDefinitions()

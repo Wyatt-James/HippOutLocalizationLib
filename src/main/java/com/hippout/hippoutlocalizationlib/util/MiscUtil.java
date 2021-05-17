@@ -23,7 +23,7 @@ public class MiscUtil {
      * @throws NullPointerException     if trimmedUUIDString is null.
      * @since 1.0.0
      */
-    public static String convertTrimmedUuidToFull(@Nonnull String trimmedUUIDString) throws IllegalArgumentException
+    public static String convertTrimmedUuidToFull(@Nonnull String trimmedUUIDString)
     {
         Objects.requireNonNull(trimmedUUIDString, "Trimmed UUID String cannot be null.");
 

@@ -20,6 +20,11 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
 
     private final NamespacedKey USAGE, SUCCESS, ERROR_NO_OVERRIDE;
 
+    /**
+     * Constructs a CommandRemoveLocaleOverride.
+     *
+     * @since 1.0.0
+     */
     public CommandRemoveLocaleOverride()
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
@@ -29,6 +34,15 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
         ERROR_NO_OVERRIDE = keyRegistry.COM_REMLOCALEOVERRIDE_NO_OVERRIDE;
     }
 
+    /**
+     * Called when the Command is executed.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param args    Arguments.
+     * @return True. False would print plugin.yml/usage
+     * @since 1.0.0
+     */
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
@@ -60,6 +74,16 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
         return true;
     }
 
+    /**
+     * Handles Tab-completion.
+     *
+     * @param sender  CommandSender.
+     * @param command Command.
+     * @param alias   Alias String.
+     * @param args    Arguments.
+     * @return A List of Tab Completions.
+     * @since 1.0.0
+     */
     @Override
     public List<String> onTabComplete(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String alias,
                                       @Nonnull String[] args)

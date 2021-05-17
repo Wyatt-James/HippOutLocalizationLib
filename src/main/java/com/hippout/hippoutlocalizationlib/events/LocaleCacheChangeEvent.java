@@ -7,6 +7,12 @@ import org.bukkit.event.*;
 import javax.annotation.*;
 import java.util.*;
 
+/**
+ * An Event called when the LocaleCache has a change that affects what getLocale(UUID) will return for a given UUID.
+ *
+ * @author Wyatt Kalmer
+ * @since 1.0.0
+ */
 public class LocaleCacheChangeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 

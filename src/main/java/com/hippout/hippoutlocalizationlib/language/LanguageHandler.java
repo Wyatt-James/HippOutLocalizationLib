@@ -15,6 +15,7 @@ import java.util.*;
  * Handles languages, including fetching from, creating, etc.
  *
  * @author Wyatt Kalmer
+ * @since 1.0.0
  */
 public class LanguageHandler {
     private final HippOutLocalizationLib plugin;
@@ -32,6 +33,7 @@ public class LanguageHandler {
      * @throws NullPointerException  if plugin or defaultLocale are null.
      * @throws LocaleFormatException if defaultLocale is an invalid format and config.yml/internal_regex_locale_tests
      *                               is enabled.
+     * @since 1.0.0
      */
     public LanguageHandler(@Nonnull HippOutLocalizationLib plugin, @Nonnull String defaultLocale)
     {

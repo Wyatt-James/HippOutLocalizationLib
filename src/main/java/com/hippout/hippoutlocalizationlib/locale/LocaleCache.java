@@ -2,8 +2,10 @@ package com.hippout.hippoutlocalizationlib.locale;
 
 import com.hippout.hippoutlocalizationlib.Configuration;
 import com.hippout.hippoutlocalizationlib.*;
+import com.hippout.hippoutlocalizationlib.events.*;
 import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
+import org.bukkit.*;
 import org.bukkit.configuration.*;
 import org.bukkit.entity.*;
 
@@ -17,9 +19,6 @@ import java.util.*;
  * @since 1.0.0
  */
 public class LocaleCache {
-    private static final String ERROR_LOCALE_NOT_FOUND = "Could not find Locale for UUID %s. They are offline or they" +
-            " have left and config.yml/debug.remove_disconnected_player_locales is set to true.";
-
     public final boolean ENABLE_LOCALE_OVERRIDES;
 
     private final HippOutLocalizationLib plugin;
@@ -27,7 +26,7 @@ public class LocaleCache {
     private final Map<UUID, String> localeOverrideMap;
 
     /**
-     * Constructs a Player Locale Cache with the given plugin.
+     * Constructs a LocaleCache with the given plugin.
      *
      * @param plugin The instance of HippOutLocalizationLib.
      * @throws NullPointerException if plugin is null.
@@ -46,7 +45,7 @@ public class LocaleCache {
     }
 
     /**
-     * Constructs a Player Locale Cache with the given plugin.
+     * Constructs a LocaleCache with the given plugin and the given Collection of initial Players.
      *
      * @param plugin         The instance of HippOutLocalizationLib.
      * @param initialPlayers Collection of Players to populate this LocaleCache with.
@@ -62,13 +61,12 @@ public class LocaleCache {
     }
 
     /**
-     * Returns the Locale used by a given UUID. Will return their override Locale if they have one.
+     * Returns the Locale used by a given UUID. Will return their override Locale if they have one. If they have no
+     * Locale, returns DEFAULT_LOCALE.
      *
      * @param id UUID to check.
      * @return The Locale String of the given UUID.
-     * @throws NullPointerException    if UUID is null.
-     * @throws LocaleNotFoundException if the UUID is not present. This will depend on the configuration
-     *                                 config.yml/debug.remove_disconnected_player_locales.
+     * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
     @Nonnull
@@ -76,22 +74,17 @@ public class LocaleCache {
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
 
-        final String locale = localeOverrideMap.getOrDefault(id, localeMap.get(id));
+        final String defaultLocale = HippOutLocalizationLib.getPlugin().getConfiguration().DEFAULT_LOCALE;
 
-        if (locale == null)
-            throw new LocaleNotFoundException("Locale for UUID " + id + " could not be found.");
-
-        return locale;
+        return localeOverrideMap.getOrDefault(id, localeMap.getOrDefault(id, defaultLocale));
     }
 
     /**
-     * Returns the Locale used by a given UUID, ignoring any override.
+     * Returns the Locale used by a given UUID, ignoring any override. If they have no Locale, returns DEFAULT_LOCALE.
      *
      * @param id UUID to check.
      * @return The Locale String of the given UUID.
-     * @throws NullPointerException    if UUID is null.
-     * @throws LocaleNotFoundException if the UUID is not present. This will depend on the configuration
-     *                                 config.yml/debug.remove_disconnected_player_locales.
+     * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
     @Nonnull
@@ -99,12 +92,9 @@ public class LocaleCache {
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
 
-        final String locale = localeMap.get(id);
+        final String defaultLocale = HippOutLocalizationLib.getPlugin().getConfiguration().DEFAULT_LOCALE;
 
-        if (locale == null)
-            throw new LocaleNotFoundException("Locale for UUID " + id + " could not be found, excluding overrides.");
-
-        return locale;
+        return localeMap.getOrDefault(id, defaultLocale);
     }
 
     /**
@@ -134,14 +124,14 @@ public class LocaleCache {
     }
 
     /**
-     * Returns whether this LocaleCache contains information for the given UUID.
+     * Returns whether this LocaleCache contains a standard Locale for the given UUID.
      *
      * @param id UUID to check
-     * @return True if the UUID is cached, false otherwise.
+     * @return True if there is a Locale, false otherwise.
      * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
-    public boolean isLocaleCached(@Nonnull UUID id)
+    public boolean hasLocale(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
         return localeMap.containsKey(id);
@@ -159,6 +149,20 @@ public class LocaleCache {
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
         return localeOverrideMap.containsKey(id);
+    }
+
+    /**
+     * Returns whether this LocaleCache contains either a standard Locale or a Locale Override for the given UUID.
+     *
+     * @param id UUID to check
+     * @return True if there is a Locale or Override, false otherwise.
+     * @throws NullPointerException if UUID is null.
+     * @since 1.0.0
+     */
+    public boolean hasLocaleOrOverride(@Nonnull UUID id)
+    {
+        Objects.requireNonNull(id, "UUID cannot be null.");
+        return localeMap.containsKey(id) || localeOverrideMap.containsKey(id);
     }
 
     /**
@@ -181,7 +185,12 @@ public class LocaleCache {
         if (!ENABLE_LOCALE_OVERRIDES)
             throw new IllegalStateException("Cannot set Locale Overrides as they are disabled.");
 
+        final String oldLocale = getLocale(id);
+
         localeOverrideMap.put(id, locale);
+
+        if (!oldLocale.equals(locale))
+            Bukkit.getPluginManager().callEvent(new LocaleCacheChangeEvent(id, oldLocale, locale));
     }
 
     /**
@@ -201,7 +210,14 @@ public class LocaleCache {
         if (!ENABLE_LOCALE_OVERRIDES)
             throw new IllegalStateException("Cannot remove Locale Overrides as they are disabled.");
 
+        final String oldLocale = getLocale(id);
+
         localeOverrideMap.remove(id);
+
+        final String newLocale = getLocale(id);
+
+        if (!oldLocale.equals(newLocale))
+            Bukkit.getPluginManager().callEvent(new LocaleCacheChangeEvent(id, oldLocale, newLocale));
     }
 
     /**
@@ -221,6 +237,7 @@ public class LocaleCache {
     /**
      * Reads a map of Locale Overrides from the given ConfigurationSection. Clears the localeOverrideMap before loading.
      *
+     * @param configurationSection ConfigurationSection to load from.
      * @throws NullPointerException  if configurationSection is null.
      * @throws IllegalStateException if ENABLE_LOCALE_OVERRIDES is disabled in plugin Configuration.
      * @since 1.0.0
@@ -242,7 +259,7 @@ public class LocaleCache {
                 final UUID id = UUID.fromString(uuid);
                 final String locale = Configuration.loadLocale(configurationSection, uuid);
 
-                localeOverrideMap.put(id, locale);
+                setLocaleOverride(id, locale);
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().warning(String.format("Error loading UUID %s from section %s. Ignored.", uuid,
                         configurationSection.getName()));
@@ -290,7 +307,12 @@ public class LocaleCache {
         if (plugin.getConfiguration().INTERNAL_REGEX_LOCALE_TESTS)
             ValidationUtil.validateLocale(locale);
 
+        final String oldLocale = getLocale(id);
+
         localeMap.put(id, locale);
+
+        if (!hasLocaleOverride(id) && !oldLocale.equals(locale))
+            Bukkit.getPluginManager().callEvent(new LocaleCacheChangeEvent(id, oldLocale, locale));
     }
 
     /**
@@ -306,6 +328,13 @@ public class LocaleCache {
         if (!localeMap.containsKey(id))
             throw new IllegalStateException("Tried to remove UUID that was not present: " + id);
 
+        final String oldLocale = getLocale(id);
+
         localeMap.remove(id);
+
+        final String newLocale = getLocale(id);
+
+        if (!hasLocaleOverride(id) && !oldLocale.equals(newLocale))
+            Bukkit.getPluginManager().callEvent(new LocaleCacheChangeEvent(id, oldLocale, newLocale));
     }
 }

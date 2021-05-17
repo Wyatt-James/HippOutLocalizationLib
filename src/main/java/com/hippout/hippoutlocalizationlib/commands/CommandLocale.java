@@ -2,7 +2,6 @@ package com.hippout.hippoutlocalizationlib.commands;
 
 import com.hippout.hippoutlocalizationlib.*;
 import com.hippout.hippoutlocalizationlib.api.*;
-import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.locale.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -53,16 +52,13 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
 
         final String targetArgShort = targetArg.substring(2);
         final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
-        try {
-            final String locale = localeCache.getLocale(id);
 
-            if (localeCache.hasLocaleOverride(id))
-                Macros.sendLocalizedMessage(SUCCESS_OVERRIDE, sender, targetArgShort, locale);
-            else
-                Macros.sendLocalizedMessage(SUCCESS, sender, targetArgShort, locale);
-        } catch (LocaleNotFoundException e) {
-            Macros.sendLocalizedMessage(NO_LOCALE, sender, targetArgShort);
-        }
+        final String locale = localeCache.getLocale(id);
+
+        if (localeCache.hasLocaleOverride(id))
+            Macros.sendLocalizedMessage(SUCCESS_OVERRIDE, sender, targetArgShort, locale);
+        else
+            Macros.sendLocalizedMessage(SUCCESS, sender, targetArgShort, locale);
 
         return true;
     }

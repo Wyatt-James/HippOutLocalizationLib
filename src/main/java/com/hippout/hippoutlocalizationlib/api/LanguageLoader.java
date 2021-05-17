@@ -29,8 +29,10 @@ public class LanguageLoader {
     /**
      * Constructs a LanguageLoader with the given JavaPlugin as its parent.
      *
-     * @param plugin                Parent JavaPlugin of this LanguageLoader. See API Note.
-     * @param languageDirectoryName Directory to load language resources from.
+     * @param plugin                  Parent JavaPlugin of this LanguageLoader. See API Note.
+     * @param languageDirectoryName   Directory to load language resources from.
+     * @param suppressSectionWarnings Whether or not to suppress warnings usually sent when the LanguageLoader
+     *                                encounters a non-String value.
      * @throws NullPointerException if plugin or languageDirectoryName is null.
      * @api.Note If languageDirectoryName is empty, will load from main data folder directory. This is discouraged
      * however.

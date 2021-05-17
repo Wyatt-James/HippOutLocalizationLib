@@ -37,7 +37,7 @@ public class Macros {
                                                  @Nonnull Collection<? extends CommandSender> recipients,
                                                  @Nonnull Object... formatArgs)
     {
-        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(messageKey, "Message Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
         Objects.requireNonNull(recipients, "Recipients cannot be null.");
         if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
@@ -60,7 +60,8 @@ public class Macros {
             if (messageMap.containsKey(locale))
                 message = messageMap.get(locale);
             else {
-                message = String.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs);
+                message = StringUtils.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs);
+
                 messageMap.put(locale, message);
             }
 
@@ -102,33 +103,7 @@ public class Macros {
     public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
                                                  @Nonnull Collection<? extends CommandSender> recipients)
     {
-        Objects.requireNonNull(messageKey, "Key cannot be null.");
-        Objects.requireNonNull(recipients, "Recipients cannot be null.");
-        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
-
-        final Map<String, String> messageMap = new HashMap<>();
-        final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
-
-        // Cache console language here because it's faster than finding the same message twice later.
-        MessageReturnWrapper consoleMessageWrapper = languageHandler.getConsoleMessage(messageKey);
-        messageMap.put(consoleMessageWrapper.getLocale(), consoleMessageWrapper.getMessage());
-
-        HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessageWrapper.getMessage());
-
-        for (CommandSender sender : recipients) {
-            final String locale = getLocale(sender);
-
-            String message;
-            if (messageMap.containsKey(locale))
-                message = messageMap.get(locale);
-            else {
-                message = languageHandler.getLocalizedMessage(locale, messageKey).getMessage();
-                messageMap.put(locale, message);
-            }
-
-            sender.sendMessage(message);
-        }
+        broadcastLocalizedMessage(messageKey, recipients, new Object[0]);
     }
 
     /**
@@ -155,8 +130,7 @@ public class Macros {
      * @param messageKey    Message Key to send.
      * @param commandSender CommandSender to send the Message to.
      * @param formatArgs    String formatting arguments.
-     * @throws NullPointerException  if MessageKey, commandSender, or formatArgs is null.
-     * @throws IllegalStateException if Player is offline.
+     * @throws NullPointerException if messageKey, commandSender, or formatArgs is null.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
@@ -170,7 +144,10 @@ public class Macros {
         final String locale = getLocale(commandSender);
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
 
-        commandSender.sendMessage(String.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs));
+        final String message = StringUtils.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(),
+                formatArgs);
+
+        commandSender.sendMessage(message);
     }
 
     /**
@@ -178,20 +155,209 @@ public class Macros {
      *
      * @param messageKey    Message Key to send.
      * @param commandSender CommandSender to send the Message to.
-     * @throws NullPointerException  if MessageKey or commandSender is null.
-     * @throws IllegalStateException if Player is offline.
+     * @throws NullPointerException if messageKey or commandSender is null.
      * @since 1.0.0
      */
     @SuppressWarnings("unused")
     public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
-        Objects.requireNonNull(messageKey, "Key cannot be null.");
-        Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
+        sendLocalizedMessage(messageKey, commandSender, new Object[0]);
+    }
 
-        final String locale = getLocale(commandSender);
+    /**
+     * Broadcasts a localized formatted title to the given Collection of Players.
+     *
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @param recipients  Collection of Players to send the Title to.
+     * @param formatArgs  String formatting arguments.
+     * @throws NullPointerException if both titleKey and subtitleKey are null.
+     * @throws NullPointerException if recipients is null.
+     * @throws NullPointerException if formatArgs is null.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
+                                               int fadeIn, int stay, int fadeOut,
+                                               @Nonnull Collection<? extends Player> recipients,
+                                               @Nonnull Object... formatArgs)
+    {
+        Objects.requireNonNull(recipients, "Recipients cannot be null.");
+        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
+
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+
+        if (titleKey == null && subtitleKey == null)
+            throw new IllegalArgumentException("At least one key cannot be null.");
+
         final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
 
-        commandSender.sendMessage(languageHandler.getLocalizedMessage(locale, messageKey).getMessage());
+        final Map<String, String> titleMap = new HashMap<>();
+        final Map<String, String> subtitleMap = new HashMap<>();
+
+        for (Player player : recipients) {
+            final String locale = getLocale(player);
+
+            final String title;
+            if (titleKey == null)
+                title = null;
+            else if (titleMap.containsKey(locale))
+                title = titleMap.get(locale);
+            else {
+                title = StringUtils.format(languageHandler.getLocalizedMessage(locale, titleKey).getMessage(), formatArgs);
+                titleMap.put(locale, title);
+            }
+
+            final String subtitle;
+            if (subtitleKey == null)
+                subtitle = null;
+            else if (subtitleMap.containsKey(locale))
+                subtitle = subtitleMap.get(locale);
+            else {
+                subtitle = StringUtils.format(languageHandler.getLocalizedMessage(locale, subtitleKey).getMessage(), formatArgs);
+                subtitleMap.put(locale, subtitle);
+            }
+
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        }
+    }
+
+    /**
+     * Broadcasts a localized formatted title to all online Players.
+     *
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @param formatArgs  String formatting arguments.
+     * @throws NullPointerException if both titleKey and subtitleKey are null.
+     * @throws NullPointerException if formatArgs is null.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
+                                               int fadeIn, int stay, int fadeOut, @Nonnull Object... formatArgs)
+    {
+        if (titleKey == null && subtitleKey == null)
+            throw new IllegalArgumentException("At least one key cannot be null.");
+
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        if (onlinePlayers.size() > 0)
+            broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, onlinePlayers, formatArgs);
+    }
+
+    /**
+     * Broadcasts a localized unformatted title to the given Collection of Players.
+     *
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @param recipients  Collection of Players to send the Title to.
+     * @throws NullPointerException if both titleKey and subtitleKey are null
+     * @throws NullPointerException if recipients is null.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
+                                               int fadeIn, int stay, int fadeOut,
+                                               @Nonnull Collection<? extends Player> recipients)
+    {
+        if (titleKey == null && subtitleKey == null)
+            throw new IllegalArgumentException("At least one key cannot be null.");
+
+        broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, recipients, new Object[0]);
+    }
+
+    /**
+     * Broadcasts a localized unformatted title to all online Players.
+     *
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @throws NullPointerException if both titleKey and subtitleKey are null
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
+                                               int fadeIn, int stay, int fadeOut)
+    {
+        if (titleKey == null && subtitleKey == null)
+            throw new IllegalArgumentException("At least one key cannot be null.");
+
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        if (onlinePlayers.size() > 0)
+            broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, onlinePlayers);
+    }
+
+    /**
+     * Sends a localized Title to the given Player.
+     *
+     * @param player      Player to send to.
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @param formatArgs  String formatting arguments.
+     * @throws NullPointerException if both titleKey and subtitleKey are null
+     * @throws NullPointerException if formatArgs is null.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void sendLocalizedTitle(@Nonnull Player player, @Nullable NamespacedKey titleKey,
+                                          @Nullable NamespacedKey subtitleKey, int fadeIn, int stay, int fadeOut,
+                                          @Nonnull Object... formatArgs)
+    {
+        Objects.requireNonNull(player);
+        if (titleKey == null && subtitleKey == null)
+            throw new IllegalArgumentException("At least one key cannot be null.");
+
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+
+        final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
+        final String locale = getLocale(player);
+
+        final String title;
+        if (titleKey == null)
+            title = null;
+        else
+            title = StringUtils.format(languageHandler.getLocalizedMessage(locale, titleKey).getMessage(), formatArgs);
+
+        final String subtitle;
+        if (subtitleKey == null)
+            subtitle = null;
+        else
+            subtitle = StringUtils.format(languageHandler.getLocalizedMessage(locale, subtitleKey).getMessage(), formatArgs);
+
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+
+    /**
+     * Sends a localized Title to the given Player.
+     *
+     * @param player      Player to send to.
+     * @param titleKey    NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn      time in ticks for titles to fade in.
+     * @param stay        time in ticks for titles to stay.
+     * @param fadeOut     time in ticks for titles to fade out.
+     * @throws NullPointerException if both titleKey and subtitleKey are null
+     * @since 1.0.0
+     */
+    @SuppressWarnings("unused")
+    public static void sendLocalizedTitle(@Nonnull Player player, @Nullable NamespacedKey titleKey,
+                                          @Nullable NamespacedKey subtitleKey, int fadeIn, int stay, int fadeOut)
+    {
+        sendLocalizedTitle(player, titleKey, subtitleKey, fadeIn, stay, fadeOut, new Object[0]);
     }
 
     /**
@@ -203,6 +369,8 @@ public class Macros {
      * @throws NullPointerException if MessageKey or commandSender is null.
      * @since 1.0.0
      */
+    @Nonnull
+    @SuppressWarnings("unused")
     public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -216,10 +384,12 @@ public class Macros {
      *
      * @param messageKey Message Key to retrieve.
      * @param locale     Locale String to get the message from.
-     * @return A Localized MEssage String with the given Locale.
+     * @return A Localized Message String with the given Locale.
      * @throws NullPointerException if MessageKey or commandSender is null.
      * @since 1.0.0
      */
+    @Nonnull
+    @SuppressWarnings("unused")
     public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull String locale)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -242,10 +412,11 @@ public class Macros {
      *                              LocaleCache.
      * @since 1.0.0
      */
+    @Nonnull
     @SuppressWarnings("unused")
     public static String getLocale(@Nonnull CommandSender commandSender)
     {
-        Objects.requireNonNull(commandSender, "Command sender cannot be null.");
+        Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
 
         HippOutLocalizationLib plugin = HippOutLocalizationLib.getPlugin();
         String locale;
@@ -279,6 +450,7 @@ public class Macros {
      *                              LocaleCache.
      * @since 1.0.0
      */
+    @Nonnull
     @SuppressWarnings("unused")
     public static String getLocaleNoOverride(@Nonnull CommandSender commandSender)
     {

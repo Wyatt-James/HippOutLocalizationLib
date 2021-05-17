@@ -1,5 +1,5 @@
 /**
- * The HippOutLocalizationLib package, contains the main HippOutLocalizationLib class.
+ * The HippOutLocalizationLib package, containing the main HippOutLocalizationLib class.
  *
  * @since 1.0.0
  */

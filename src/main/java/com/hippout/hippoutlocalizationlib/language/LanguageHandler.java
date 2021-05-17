@@ -20,7 +20,7 @@ public class LanguageHandler {
     private final HippOutLocalizationLib plugin;
 
     private final Map<String, Language> languageMap;
-    private final List<NamespacedKey> keys;
+    private final List<NamespacedKey> keys; // Cache
     private final List<String> locales; // Cache
     private final Language defaultLanguage; // Cache
 
@@ -244,6 +244,17 @@ public class LanguageHandler {
         }
 
         return new NamespacedKey(plugin, keyLowerCase);
+    }
+
+    /**
+     * Returns whether this LanguageHandler contains the given NamespacedKey.
+     *
+     * @param key Key to check.
+     * @return True if this LanguageHandler contains the given NamespacedKey, else false.
+     */
+    public boolean containsKey(@Nullable NamespacedKey key)
+    {
+        return keys.contains(key);
     }
 
     /**

@@ -45,8 +45,8 @@ public class LanguageHandler {
 
         this.plugin = plugin;
         languageMap = new HashMap<>();
-        keys = new ArrayList<>();
-        locales = new ArrayList<>();
+        keys = new LinkedList<>();
+        locales = new LinkedList<>();
 
         defaultLanguage = new Language(plugin, defaultLocale);
         languageMap.put(defaultLocale, defaultLanguage);

@@ -23,6 +23,7 @@ import java.util.*;
  */
 public class HippOutLocalizationLib extends JavaPlugin {
     public static final String FAILSAFE_LOCALE = "failsafe_lc";
+    public static final String LANGUAGE_DIRECTORY = "languages";
 
     private static HippOutLocalizationLib instance;
 
@@ -41,7 +42,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
 
         instance = this;
         saveDefaultConfig();
-        saveResource("languages" + File.separator + "en.yml", false);
+        saveResource(LANGUAGE_DIRECTORY + File.separator + "en.yml", false);
 
         try {
             this.configuration = new Configuration(this);
@@ -60,7 +61,7 @@ public class HippOutLocalizationLib extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.eventListener, this);
 
-        LanguageLoader languageLoader = new LanguageLoader(this, "languages",
+        LanguageLoader languageLoader = new LanguageLoader(this, LANGUAGE_DIRECTORY,
                 configuration.SUPPRESS_SECTION_WARNINGS);
 
         for (String fileName : configuration.getLanguageFileDefinitions()) {

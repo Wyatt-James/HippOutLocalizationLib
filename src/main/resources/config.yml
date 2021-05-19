@@ -1,4 +1,4 @@
-config_version: "0.0.1"
+config_version: "1.0.0"
 
 # List of language files to load from the languages configuration sub-folder.
 language_files: [ en.yml ]
@@ -11,15 +11,15 @@ save_and_load_locale_overrides_to_file: true
 
 # Various defaults.
 defaults:
-  # Default fall-back locale for things such as Players.
+  # Default fall-back locales.
   default_locale: "en_us"
   console_locale: "en_us"
   remote_console_locale: "en_us"
 
-  # Message sent when all else fails. Has a default Locale specified by HippOutLocalizationLib.FAILSAFE_LOCALE.
+  # Message sent when all else fails. Has a default Locale of failsafe_lc, specified in the main plugin class.
   failsafe_message: "The requested message could not be loaded."
 
-# Various parameters for loading
+# Various parameters for loading.
 loading:
   # Whether or not to suppress warnings from LanguageLoaders when a non-String argument is found. Usually thrown for sections.
   suppress_section_warnings: true

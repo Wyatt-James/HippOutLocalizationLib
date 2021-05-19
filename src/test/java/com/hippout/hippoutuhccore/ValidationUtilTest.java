@@ -35,7 +35,7 @@ public class ValidationUtilTest {
             "en_gb",
             "en_nz",
             "en_ud",
-            "en_7s",
+            "en_pt",
             "en_us",
             "eo_uy",
             "es_ar",

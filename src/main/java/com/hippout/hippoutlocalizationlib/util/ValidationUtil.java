@@ -13,7 +13,7 @@ import java.util.regex.*;
  * @since 1.0.0
  */
 public class ValidationUtil {
-    public static final String LOCALE_REGEX = "(^[a-z\\-]{2,8}_[a-z0-9]{2,3}$)|(^[a-z]{2,8}$)";
+    public static final String LOCALE_REGEX = "(^[a-z\\-]{2,8}_[a-z]{2,3}$)|(^[a-z]{2,8}$)";
     public static final Pattern ISO639_LANGUAGE_PATTERN = Pattern.compile(LOCALE_REGEX);
 
     private static final String DEFAULT_VALIDATION_ERROR = "Locale does not match ISO-639 Locale Pattern in" +

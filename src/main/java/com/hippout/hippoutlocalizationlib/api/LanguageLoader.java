@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.*;
 import javax.annotation.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
 
 /**
  * A convenient way to load language files into HippOutLocalizationLib.
@@ -23,7 +22,6 @@ import java.util.logging.*;
 public class LanguageLoader {
     private final JavaPlugin plugin;
     private final boolean suppressSectionWarnings;
-    private final String languageDirectoryName;
     private final String languageDirectory;
 
     /**
@@ -42,8 +40,6 @@ public class LanguageLoader {
     public LanguageLoader(@Nonnull JavaPlugin plugin, @Nonnull String languageDirectoryName, boolean suppressSectionWarnings)
     {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
-        this.languageDirectoryName = Objects.requireNonNull(languageDirectoryName, "Language Directory Name" +
-                " cannot be null.");
         this.languageDirectory = plugin.getDataFolder() + File.separator + languageDirectoryName;
         this.suppressSectionWarnings = suppressSectionWarnings;
     }
@@ -65,11 +61,9 @@ public class LanguageLoader {
         Objects.requireNonNull(fileName, "File Name cannot be null.");
         if (fileName.isEmpty()) throw new IllegalArgumentException("File Name cannot be empty.");
 
-        final Logger logger = plugin.getLogger();
         final YamlConfiguration fc = loadLanguageConfig(fileName);
 
         final String[] locales = fc.getStringList("config.locales").toArray(new String[0]);
-        final boolean suppressSectionWarnings = fc.getBoolean("suppress_section_warnings", false);
 
         final ConfigurationSection messageSection = Objects.requireNonNull(fc.getConfigurationSection("messages"),
                 "ConfigurationSection messageSection could not be found in language file " + fileName);

@@ -120,6 +120,7 @@ public class LanguageHandler {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public MessageReturnWrapper getDefaultLanguageMessage(@Nonnull NamespacedKey messageKey)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -154,6 +155,7 @@ public class LanguageHandler {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public MessageReturnWrapper getConsoleMessage(@Nonnull NamespacedKey messageKey)
     {
         return getLocalizedMessage(plugin.getConfiguration().CONSOLE_LOCALE, messageKey);
@@ -169,6 +171,7 @@ public class LanguageHandler {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public MessageReturnWrapper getRemoteConsoleMessage(@Nonnull NamespacedKey messageKey)
     {
         return getLocalizedMessage(plugin.getConfiguration().REMOTE_CONSOLE_LOCALE, messageKey);
@@ -301,6 +304,7 @@ public class LanguageHandler {
      * @throws LocaleFormatException if API Locale Tests are enabled and locale has an invalid format.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public boolean isLocaleRegistered(@Nonnull String locale)
     {
         Objects.requireNonNull(locale, "Locale cannot be null.");

@@ -25,6 +25,7 @@ public class StringUtils {
     public static String format(@Nonnull String str, @Nonnull Object... args)
     {
         Objects.requireNonNull(args, "Args cannot be null.");
+
         if (args.length != 0)
             return String.format(str, args);
         else

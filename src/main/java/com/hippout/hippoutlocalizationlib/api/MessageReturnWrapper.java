@@ -51,6 +51,7 @@ public class MessageReturnWrapper {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public String getMessage()
     {
         return message;
@@ -63,6 +64,7 @@ public class MessageReturnWrapper {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public String getLocale()
     {
         return locale;
@@ -75,6 +77,7 @@ public class MessageReturnWrapper {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public MessageType getMessageType()
     {
         return messageType;
@@ -87,6 +90,7 @@ public class MessageReturnWrapper {
      * @since 1.0.0
      */
     @Override
+    @SuppressWarnings("unused")
     public String toString()
     {
         return message;

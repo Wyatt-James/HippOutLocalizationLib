@@ -82,6 +82,7 @@ public class LocaleCacheChangeEvent extends Event {
         return newLocale;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList()
     {
         return handlers;
@@ -89,6 +90,7 @@ public class LocaleCacheChangeEvent extends Event {
 
     @Override
     @Nonnull
+    @SuppressWarnings("unused")
     public HandlerList getHandlers()
     {
         return handlers;

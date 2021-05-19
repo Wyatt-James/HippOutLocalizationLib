@@ -41,8 +41,6 @@ public class Configuration {
 
     // --------------- Instance Variables ---------------
 
-    private final HippOutLocalizationLib plugin;
-
     // Root
     public final String CONFIG_VERSION;
 
@@ -79,11 +77,9 @@ public class Configuration {
      */
     Configuration(@Nonnull HippOutLocalizationLib plugin) throws IOException, InvalidConfigurationException
     {
-        this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
-
         loadConfigFile(); // Exceptions can be thrown here.
 
-        final FileConfiguration rootConfig = this.plugin.getConfig();
+        final FileConfiguration rootConfig = plugin.getConfig();
         final ConfigurationSection defaultsSection = rootConfig.getConfigurationSection("defaults");
         final ConfigurationSection loadingSection = rootConfig.getConfigurationSection("loading");
         final ConfigurationSection debugSection = rootConfig.getConfigurationSection("debug");

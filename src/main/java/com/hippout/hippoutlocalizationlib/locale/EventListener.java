@@ -36,6 +36,7 @@ public class EventListener implements Listener {
      * @param event Event passed from Bukkit
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
@@ -50,6 +51,7 @@ public class EventListener implements Listener {
      * @param event Event passed from Bukkit
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChangesLocale(PlayerLocaleChangeEvent event)
     {
@@ -64,6 +66,7 @@ public class EventListener implements Listener {
      * @param event Event passed from Bukkit
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent event)
     {

@@ -88,6 +88,7 @@ public class LocaleCache {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public String getLocaleNoOverride(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -108,6 +109,7 @@ public class LocaleCache {
      * @since 1.0.0
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public String getLocaleOverride(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -131,6 +133,7 @@ public class LocaleCache {
      * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public boolean hasLocale(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -145,6 +148,7 @@ public class LocaleCache {
      * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public boolean hasLocaleOverride(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -159,6 +163,7 @@ public class LocaleCache {
      * @throws NullPointerException if UUID is null.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public boolean hasLocaleOrOverride(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -175,6 +180,7 @@ public class LocaleCache {
      * @throws IllegalStateException if Locale Overrides are disabled.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public void setLocaleOverride(@Nonnull UUID id, @Nonnull String locale)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -201,6 +207,7 @@ public class LocaleCache {
      * @throws IllegalStateException if Locale Overrides are disabled.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public void removeLocaleOverride(@Nonnull UUID id)
     {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -226,6 +233,7 @@ public class LocaleCache {
      * @throws IllegalStateException if Locale Overrides are disabled.
      * @since 1.0.0
      */
+    @SuppressWarnings("unused")
     public void clearLocaleOverrides()
     {
         if (!ENABLE_LOCALE_OVERRIDES)

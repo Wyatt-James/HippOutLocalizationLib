@@ -365,7 +365,7 @@ public class Macros {
      *
      * @param messageKey    Message Key to retrieve.
      * @param commandSender CommandSender to get the Locale of.
-     * @return A Localized MEssage String with the given CommandSender's Locale.
+     * @return A Localized Message String with the given CommandSender's Locale.
      * @throws NullPointerException if MessageKey or commandSender is null.
      * @since 1.0.0
      */

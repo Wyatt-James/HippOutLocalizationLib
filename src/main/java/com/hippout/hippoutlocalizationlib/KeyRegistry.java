@@ -1,7 +1,9 @@
 package com.hippout.hippoutlocalizationlib;
 
-import com.hippout.hippoutlocalizationlib.language.*;
 import org.bukkit.*;
+
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * An object that contains keys for all messages in HippOutLocalizationLib.
@@ -14,12 +16,18 @@ public class KeyRegistry {
 
     public final NamespacedKey TARGETARGS_INVALID_TYPE, TARGETARGS_INVALID_FORMAT;
 
+    public final NamespacedKey COM_GENERIC_PERMISSION_ERROR, COM_GENERIC_PERMISSION_ERROR_MANAGE_SELF,
+            COM_GENERIC_PERMISSION_ERROR_MANAGE_ALL, COM_GENERIC_PERMISSION_ERROR_CHECK_SELF,
+            COM_GENERIC_PERMISSION_ERROR_CHECK_ALL;
+
     public final NamespacedKey COM_LOCALE_USAGE, COM_LOCALE_SUCCESS, COM_LOCALE_SUCCESS_OVERRIDE, COM_LOCALE_NO_LOCALE;
 
     public final NamespacedKey COM_SETLOCALEOVERRIDE_USAGE, COM_SETLOCALEOVERRIDE_SUCCESS;
 
     public final NamespacedKey COM_REMLOCALEOVERRIDE_USAGE, COM_REMLOCALEOVERRIDE_SUCCESS,
             COM_REMLOCALEOVERRIDE_NO_OVERRIDE;
+
+    private final HippOutLocalizationLib plugin;
 
     /**
      * Constructs a KeyRegistry.
@@ -28,26 +36,46 @@ public class KeyRegistry {
      */
     public KeyRegistry()
     {
-        LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
-        HippOutLocalizationLib plugin = HippOutLocalizationLib.getPlugin();
+        this.plugin = HippOutLocalizationLib.getPlugin();
 
-        INVALID_FORMAT_LOCALE = languageHandler.getKey(plugin, "invalid_format_locale");
-        COMMAND_DISABLED = languageHandler.getKey(plugin, "command_disabled");
-        PLAYER_NOT_FOUND = languageHandler.getKey(plugin, "player_not_found");
+        INVALID_FORMAT_LOCALE = getKey("invalid_format_locale");
+        COMMAND_DISABLED = getKey("command_disabled");
+        PLAYER_NOT_FOUND = getKey("player_not_found");
 
-        TARGETARGS_INVALID_TYPE = languageHandler.getKey(plugin, "targetargs.invalid_type");
-        TARGETARGS_INVALID_FORMAT = languageHandler.getKey(plugin, "targetargs.invalid_format");
+        TARGETARGS_INVALID_TYPE = getKey("targetargs.invalid_type");
+        TARGETARGS_INVALID_FORMAT = getKey("targetargs.invalid_format");
 
-        COM_LOCALE_USAGE = languageHandler.getKey(plugin, "command.locale.usage");
-        COM_LOCALE_SUCCESS = languageHandler.getKey(plugin, "command.locale.success");
-        COM_LOCALE_SUCCESS_OVERRIDE = languageHandler.getKey(plugin, "command.locale.success_override");
-        COM_LOCALE_NO_LOCALE = languageHandler.getKey(plugin, "command.locale.no_locale");
+        COM_GENERIC_PERMISSION_ERROR = getKey("command.generic.permission_error");
+        COM_GENERIC_PERMISSION_ERROR_MANAGE_SELF = getKey("command.generic.permission_error_manage_self");
+        COM_GENERIC_PERMISSION_ERROR_MANAGE_ALL = getKey("command.generic.permission_error_manage_all");
+        COM_GENERIC_PERMISSION_ERROR_CHECK_SELF = getKey("command.generic.permission_error_check_self");
+        COM_GENERIC_PERMISSION_ERROR_CHECK_ALL = getKey("command.generic.permission_error_check_all");
 
-        COM_SETLOCALEOVERRIDE_USAGE = languageHandler.getKey(plugin, "command.setlocaleoverride.usage");
-        COM_SETLOCALEOVERRIDE_SUCCESS = languageHandler.getKey(plugin, "command.setlocaleoverride.success");
+        COM_LOCALE_USAGE = getKey("command.locale.usage");
+        COM_LOCALE_SUCCESS = getKey("command.locale.success");
+        COM_LOCALE_SUCCESS_OVERRIDE = getKey("command.locale.success_override");
+        COM_LOCALE_NO_LOCALE = getKey("command.locale.no_locale");
 
-        COM_REMLOCALEOVERRIDE_USAGE = languageHandler.getKey(plugin, "command.removelocaleoverride.usage");
-        COM_REMLOCALEOVERRIDE_SUCCESS = languageHandler.getKey(plugin, "command.removelocaleoverride.success");
-        COM_REMLOCALEOVERRIDE_NO_OVERRIDE = languageHandler.getKey(plugin, "command.removelocaleoverride.no_override");
+        COM_SETLOCALEOVERRIDE_USAGE = getKey("command.setlocaleoverride.usage");
+        COM_SETLOCALEOVERRIDE_SUCCESS = getKey("command.setlocaleoverride.success");
+
+        COM_REMLOCALEOVERRIDE_USAGE = getKey("command.removelocaleoverride.usage");
+        COM_REMLOCALEOVERRIDE_SUCCESS = getKey("command.removelocaleoverride.success");
+        COM_REMLOCALEOVERRIDE_NO_OVERRIDE = getKey("command.removelocaleoverride.no_override");
+    }
+
+    /**
+     * Gets an existing NamespacedKey with the HippOutLocalizationLib plugin.
+     *
+     * @param key Key to search for.
+     * @return The found key.
+     * @throws IllegalArgumentException if the requested NamespacedKey could not be found.
+     * @since 1.0.0
+     */
+    private NamespacedKey getKey(@Nonnull String key)
+    {
+        Objects.requireNonNull(key, "Key cannot be null.");
+
+        return HippOutLocalizationLib.getPlugin().getLanguageHandler().getExistingKey(plugin, key);
     }
 }

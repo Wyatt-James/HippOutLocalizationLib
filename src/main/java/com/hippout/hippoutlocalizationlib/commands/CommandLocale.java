@@ -5,6 +5,8 @@ import com.hippout.hippoutlocalizationlib.api.*;
 import com.hippout.hippoutlocalizationlib.locale.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.permissions.*;
 import org.bukkit.util.*;
 
 import javax.annotation.*;
@@ -18,7 +20,11 @@ import java.util.*;
  */
 public class CommandLocale implements CommandExecutor, TabCompleter {
 
+    private final NamespacedKey PERMISSION_ERROR, PERMISSION_ERROR_SELF, PERMISSION_ERROR_ALL;
+
     private final NamespacedKey USAGE, SUCCESS, SUCCESS_OVERRIDE, NO_LOCALE;
+
+    private final Permission checkAll, checkSelf;
 
     /**
      * Constructs a CommandLocale.
@@ -29,10 +35,17 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
 
+        PERMISSION_ERROR = keyRegistry.COM_GENERIC_PERMISSION_ERROR;
+        PERMISSION_ERROR_SELF = keyRegistry.COM_GENERIC_PERMISSION_ERROR_CHECK_SELF;
+        PERMISSION_ERROR_ALL = keyRegistry.COM_GENERIC_PERMISSION_ERROR_CHECK_ALL;
+
         USAGE = keyRegistry.COM_LOCALE_USAGE;
         SUCCESS = keyRegistry.COM_LOCALE_SUCCESS;
         SUCCESS_OVERRIDE = keyRegistry.COM_LOCALE_SUCCESS_OVERRIDE;
         NO_LOCALE = keyRegistry.COM_LOCALE_NO_LOCALE;
+
+        checkAll = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.check.all");
+        checkSelf = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.check.self");
     }
 
     /**
@@ -48,6 +61,11 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
     {
+        if (!sender.hasPermission(checkAll) && !sender.hasPermission(checkSelf)) {
+            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            return true;
+        }
+
         if (args.length != 1) {
             Macros.sendLocalizedMessage(USAGE, sender);
             return true;
@@ -62,6 +80,24 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         } catch (IllegalArgumentException e) {
             sender.sendMessage(e.getMessage());
             return true;
+        }
+
+        // Check Permission
+        if (!sender.hasPermission(checkAll)) {
+            if (sender instanceof Player) {
+                final Player p = (Player) sender;
+
+                if (!p.getUniqueId().equals(id)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    return true;
+                } else if (!sender.hasPermission(checkSelf)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    return true;
+                }
+            } else {
+                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                return true;
+            }
         }
 
         final String targetArgShort = targetArg.substring(2);

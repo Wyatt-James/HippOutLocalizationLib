@@ -10,23 +10,23 @@ commands:
   setlocaleoverride:
     description: Sets a Player's Locale Override.
     usage: /setlocaleoverride <p:<player name> | u:<UUID>> <locale>
-    permission: hippoutlocalizationlib.locales.manage
-    permission-message: You do not have have permission to use this command.
   removelocaleoverride:
     description: Removes a Player's Locale Override.
     usage: /removelocaleoverride <p:<player name> | u:<UUID>>
-    permission: hippoutlocalizationlib.locales.manage
-    permission-message: You do not have have permission to use this command.
   locale:
     description: Checks a Player's or UUID's Locale.
     usage: /locale <p:<player name> | u:<UUID>>
-    permission: hippoutlocalizationlib.locales.check
-    permission-message: You do not have have permission to use this command.
 
 permissions:
-  hippoutlocalizationlib.locales.manage:
+  hippoutlocalizationlib.locales.manage.all:
     description: Allows you to manage Locales.
     default: op
-  hippoutlocalizationlib.locales.check:
+  hippoutlocalizationlib.locales.manage.self:
+    description: Allows you to manage your own Locales.
+    default: true
+  hippoutlocalizationlib.locales.check.all:
     description: Allows you to check Locales.
     default: op
+  hippoutlocalizationlib.locales.check.self:
+    description: Allows you to check your own Locales.
+    default: true

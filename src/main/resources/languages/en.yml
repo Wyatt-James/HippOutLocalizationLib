@@ -11,6 +11,12 @@ messages:
     invalid_format: "§cInvalid format: %s. Valid formats are: p<Player>, u<UUID>"
 
   command:
+    generic:
+      permission_error: "§cYou do not have have permission to use this command."
+      permission_error_manage_all: "§cYou do not have permission to manage others' Locale Overrides."
+      permission_error_manage_self: "§cYou do not have permission to manage your own Locale Override."
+      permission_error_check_all: "§cYou do not have permission to check others' Locale Overrides."
+      permission_error_check_self: "§cYou do not have permission to check your own Locale Override."
     setlocaleoverride:
       usage: "/setlocaleoverride <p:<player name> | u:<UUID>> <locale>"
       success: "§aSuccessfully set the Locale Override for %s to %s."

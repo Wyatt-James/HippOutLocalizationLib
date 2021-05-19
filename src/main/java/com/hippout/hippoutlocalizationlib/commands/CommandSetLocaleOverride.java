@@ -6,6 +6,8 @@ import com.hippout.hippoutlocalizationlib.exceptions.*;
 import com.hippout.hippoutlocalizationlib.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.permissions.*;
 import org.bukkit.util.*;
 
 import javax.annotation.*;
@@ -19,7 +21,11 @@ import java.util.*;
  */
 public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
 
+    private final NamespacedKey PERMISSION_ERROR, PERMISSION_ERROR_SELF, PERMISSION_ERROR_ALL;
+
     private final NamespacedKey USAGE, SUCCESS, INVALID_FORMAT_LOCALE;
+
+    private final Permission manageAll, manageSelf;
 
     /**
      * Constructs a CommandSetLocaleOverride.
@@ -30,10 +36,18 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
 
+        PERMISSION_ERROR = keyRegistry.COM_GENERIC_PERMISSION_ERROR;
+        PERMISSION_ERROR_SELF = keyRegistry.COM_GENERIC_PERMISSION_ERROR_MANAGE_SELF;
+        PERMISSION_ERROR_ALL = keyRegistry.COM_GENERIC_PERMISSION_ERROR_MANAGE_ALL;
+
+
         USAGE = keyRegistry.COM_SETLOCALEOVERRIDE_USAGE;
         SUCCESS = keyRegistry.COM_SETLOCALEOVERRIDE_SUCCESS;
 
         INVALID_FORMAT_LOCALE = keyRegistry.INVALID_FORMAT_LOCALE;
+
+        manageAll = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.manage.all");
+        manageSelf = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.manage.self");
     }
 
     /**
@@ -49,6 +63,11 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
     {
+        if (!sender.hasPermission(manageAll) && !sender.hasPermission(manageSelf)) {
+            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            return true;
+        }
+
         if (args.length != 2) {
             Macros.sendLocalizedMessage(USAGE, sender);
             return true;
@@ -64,6 +83,24 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
         } catch (IllegalArgumentException e) {
             sender.sendMessage(e.getMessage());
             return true;
+        }
+
+        // Check Permission
+        if (!sender.hasPermission(manageAll)) {
+            if (sender instanceof Player) {
+                final Player p = (Player) sender;
+
+                if (!p.getUniqueId().equals(id)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    return true;
+                } else if (!sender.hasPermission(manageSelf)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    return true;
+                }
+            } else {
+                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                return true;
+            }
         }
 
         // Validate Locale

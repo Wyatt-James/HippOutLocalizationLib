@@ -249,6 +249,39 @@ public class LanguageHandler {
     }
 
     /**
+     * Returns a NamespacedKey with the given plugin namespace and key. If this NamespacedKey is already registered,
+     * returns the existing instance, else throws an exception.
+     *
+     * @param plugin Plugin of the NamespacedKey to fetch.
+     * @param key    Key to search for.
+     * @return The found or created NamespacedKey.
+     * @throws NullPointerException     if Plugin or Key is empty.
+     * @throws IllegalArgumentException if Key is empty.
+     * @throws IllegalArgumentException if the requested Key could not be found.
+     * @since 1.0.0
+     */
+    @Nonnull
+    public NamespacedKey getExistingKey(@Nonnull JavaPlugin plugin, @Nonnull String key)
+    {
+        Objects.requireNonNull(plugin, "Plugin cannot be null.");
+        Objects.requireNonNull(key, "Key cannot be null.");
+        if (key.isEmpty()) throw new IllegalArgumentException("Key cannot be empty.");
+
+        final String pluginKeyName = plugin.getName().toLowerCase();
+        final String keyLowerCase = key.toLowerCase();
+
+        if (!keyLowerCase.equals(key)) plugin.getLogger().warning("Uppercase keys are automatically converted to " +
+                "lowercase by Bukkit. Yours: " + key);
+
+        for (NamespacedKey messageKey : keys) {
+            if (messageKey.getKey().equals(keyLowerCase) && messageKey.getNamespace().equals(pluginKeyName))
+                return messageKey;
+        }
+
+        throw new IllegalArgumentException(String.format("Key not found: %s:%s", pluginKeyName, keyLowerCase));
+    }
+
+    /**
      * Returns whether this LanguageHandler contains the given NamespacedKey.
      *
      * @param key Key to check.

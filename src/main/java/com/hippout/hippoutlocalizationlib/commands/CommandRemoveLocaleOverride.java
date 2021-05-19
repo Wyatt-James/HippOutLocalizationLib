@@ -5,6 +5,8 @@ import com.hippout.hippoutlocalizationlib.api.*;
 import com.hippout.hippoutlocalizationlib.locale.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.permissions.*;
 import org.bukkit.util.*;
 
 import javax.annotation.*;
@@ -18,7 +20,11 @@ import java.util.*;
  */
 public class CommandRemoveLocaleOverride implements CommandExecutor, TabCompleter {
 
+    private final NamespacedKey PERMISSION_ERROR, PERMISSION_ERROR_SELF, PERMISSION_ERROR_ALL;
+
     private final NamespacedKey USAGE, SUCCESS, ERROR_NO_OVERRIDE;
+
+    private final Permission manageAll, manageSelf;
 
     /**
      * Constructs a CommandRemoveLocaleOverride.
@@ -29,9 +35,16 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
     {
         final KeyRegistry keyRegistry = HippOutLocalizationLib.getKeyRegistry();
 
+        PERMISSION_ERROR = keyRegistry.COM_GENERIC_PERMISSION_ERROR;
+        PERMISSION_ERROR_SELF = keyRegistry.COM_GENERIC_PERMISSION_ERROR_MANAGE_SELF;
+        PERMISSION_ERROR_ALL = keyRegistry.COM_GENERIC_PERMISSION_ERROR_MANAGE_ALL;
+
         USAGE = keyRegistry.COM_REMLOCALEOVERRIDE_USAGE;
         SUCCESS = keyRegistry.COM_REMLOCALEOVERRIDE_SUCCESS;
         ERROR_NO_OVERRIDE = keyRegistry.COM_REMLOCALEOVERRIDE_NO_OVERRIDE;
+
+        manageAll = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.manage.all");
+        manageSelf = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.manage.self");
     }
 
     /**
@@ -47,6 +60,11 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
     {
+        if (!sender.hasPermission(manageAll) && !sender.hasPermission(manageSelf)) {
+            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            return true;
+        }
+
         if (args.length != 1) {
             Macros.sendLocalizedMessage(USAGE, sender);
             return true;
@@ -61,6 +79,24 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
         } catch (IllegalArgumentException e) {
             sender.sendMessage(e.getMessage());
             return true;
+        }
+
+        // Check Permission
+        if (!sender.hasPermission(manageAll)) {
+            if (sender instanceof Player) {
+                final Player p = (Player) sender;
+
+                if (!p.getUniqueId().equals(id)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    return true;
+                } else if (!sender.hasPermission(manageSelf)) {
+                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    return true;
+                }
+            } else {
+                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                return true;
+            }
         }
 
         final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();

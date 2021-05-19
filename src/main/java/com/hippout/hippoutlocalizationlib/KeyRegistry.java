@@ -20,7 +20,7 @@ public class KeyRegistry {
             COM_GENERIC_PERMISSION_ERROR_MANAGE_ALL, COM_GENERIC_PERMISSION_ERROR_CHECK_SELF,
             COM_GENERIC_PERMISSION_ERROR_CHECK_ALL;
 
-    public final NamespacedKey COM_LOCALE_USAGE, COM_LOCALE_SUCCESS, COM_LOCALE_SUCCESS_OVERRIDE, COM_LOCALE_NO_LOCALE;
+    public final NamespacedKey COM_LOCALE_USAGE, COM_LOCALE_SUCCESS, COM_LOCALE_SUCCESS_OVERRIDE;
 
     public final NamespacedKey COM_SETLOCALEOVERRIDE_USAGE, COM_SETLOCALEOVERRIDE_SUCCESS;
 
@@ -54,7 +54,6 @@ public class KeyRegistry {
         COM_LOCALE_USAGE = getKey("command.locale.usage");
         COM_LOCALE_SUCCESS = getKey("command.locale.success");
         COM_LOCALE_SUCCESS_OVERRIDE = getKey("command.locale.success_override");
-        COM_LOCALE_NO_LOCALE = getKey("command.locale.no_locale");
 
         COM_SETLOCALEOVERRIDE_USAGE = getKey("command.setlocaleoverride.usage");
         COM_SETLOCALEOVERRIDE_SUCCESS = getKey("command.setlocaleoverride.success");

@@ -28,4 +28,3 @@ messages:
       usage: "/locale <p:<player name> | u:<UUID>>"
       success: "§aLocale of %s: %s."
       success_override: "§aOverriden Locale of %s: %s."
-      no_locale: "§a%s does not exist or has no Locale."

@@ -22,7 +22,7 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
 
     private final NamespacedKey PERMISSION_ERROR, PERMISSION_ERROR_SELF, PERMISSION_ERROR_ALL;
 
-    private final NamespacedKey USAGE, SUCCESS, SUCCESS_OVERRIDE, NO_LOCALE;
+    private final NamespacedKey USAGE, SUCCESS, SUCCESS_OVERRIDE;
 
     private final Permission checkAll, checkSelf;
 
@@ -42,7 +42,6 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         USAGE = keyRegistry.COM_LOCALE_USAGE;
         SUCCESS = keyRegistry.COM_LOCALE_SUCCESS;
         SUCCESS_OVERRIDE = keyRegistry.COM_LOCALE_SUCCESS_OVERRIDE;
-        NO_LOCALE = keyRegistry.COM_LOCALE_NO_LOCALE;
 
         checkAll = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.check.all");
         checkSelf = Bukkit.getPluginManager().getPermission("hippoutlocalizationlib.locales.check.self");

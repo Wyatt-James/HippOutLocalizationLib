@@ -40,7 +40,7 @@ class Language {
         this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
         this.locale = ValidationUtil.validateLocale(locale);
         this.messageMap = new HashMap<>();
-        this.keys = new ArrayList<>();
+        this.keys = new LinkedList<>();
     }
 
     /**
@@ -62,25 +62,6 @@ class Language {
 
         messageMap.put(messageKey, message);
         keys.add(messageKey);
-    }
-
-    /**
-     * Removes a String message from this Language.
-     *
-     * @param messageKey Key to remove message of
-     * @throws NullPointerException     if messageKey is null.
-     * @throws IllegalArgumentException if the message could not be found.
-     * @since 1.0.0
-     */
-    void removeMessage(@Nonnull NamespacedKey messageKey)
-    {
-        Objects.requireNonNull(messageKey, "Message Key cannot be null. Lang: " + locale);
-
-        // If removed, message was either null (illegal) or messageKey was not present.
-        if (messageMap.remove(messageKey) == null)
-            throw new IllegalArgumentException(String.format(ERROR_REMOVE_NOT_FOUND, locale, messageKey));
-        else
-            keys.remove(messageKey);
     }
 
     /**
@@ -130,6 +111,7 @@ class Language {
      * @since 1.0.0
      */
     @Nullable
+    @SuppressWarnings("unused")
     NamespacedKey getMessageKey(@Nonnull String key)
     {
         Objects.requireNonNull(key, "Key cannot be null.");

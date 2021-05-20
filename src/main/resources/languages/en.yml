@@ -8,7 +8,7 @@ messages:
 
   targetargs:
     invalid_type: "§cInvalid target type: %s. Valid types are: p(Player), u(UUID)"
-    invalid_format: "§cInvalid format: %s. Valid formats are: p<Player>, u<UUID>"
+    invalid_format: "§cInvalid format: %s. Valid formats are: p:<Player>, u:<UUID>"
 
   command:
     generic:

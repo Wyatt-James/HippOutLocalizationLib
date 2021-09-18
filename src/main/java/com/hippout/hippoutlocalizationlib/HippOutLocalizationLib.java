@@ -138,12 +138,12 @@ public class HippOutLocalizationLib extends JavaPlugin {
         getLogger().info(String.format("Attempting to save Locale Cache to file %s.", localeCacheFileName));
 
         // Load File
-        final File configFile = new File(getDataFolder(), localeCacheFileName);
+        final File cacheFile = new File(getDataFolder(), localeCacheFileName);
 
-        boolean exists = configFile.exists();
+        boolean exists = cacheFile.exists();
         if (!exists) {
             try {
-                configFile.createNewFile();
+                cacheFile.createNewFile();
                 exists = true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -151,13 +151,13 @@ public class HippOutLocalizationLib extends JavaPlugin {
         }
 
         if (exists) {
-            if (configFile.canRead() && configFile.canWrite()) {
-                final YamlConfiguration localeCacheConfig = YamlConfiguration.loadConfiguration(configFile);
+            if (cacheFile.canRead() && cacheFile.canWrite()) {
+                final YamlConfiguration localeCacheConfig = YamlConfiguration.loadConfiguration(cacheFile);
                 localeCacheConfig.options().header(Configuration.LOCALE_CACHE_HEADER);
                 localeCache.writeOverrides(localeCacheConfig);
 
                 try {
-                    localeCacheConfig.save(configFile);
+                    localeCacheConfig.save(cacheFile);
                 } catch (IOException e) {
                     getLogger().warning(String.format("Could not save Player Locale Overrides to file %s", localeCacheFileName));
                     e.printStackTrace();

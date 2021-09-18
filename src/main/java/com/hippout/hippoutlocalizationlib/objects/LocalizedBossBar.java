@@ -198,13 +198,22 @@ public class LocalizedBossBar implements BossBar, Listener {
         final BossBar bossBar = Bukkit.createBossBar(title, dummy.getColor(), dummy.getStyle(), barFlags);
 
         bossBar.setProgress(dummy.getProgress());
-
-        dummy.getPlayers().forEach(bossBar::addPlayer);
         bossBar.setVisible(isVisible());
 
         locales.add(locale);
         bossBarMap.put(locale, bossBar);
         bossBars.add(bossBar);
+
+        for(Player p : dummy.getPlayers())
+        {
+            final String playerLocale = HippOutLocalizationLib.getPlugin().getLocaleCache().getLocale(p.getUniqueId());
+            if(playerLocale.equals(locale))
+            {
+                bossBarMap.get(playerLocale).removePlayer(p);
+                bossBar.addPlayer(p);
+            }
+        }
+
         return bossBar;
     }
 

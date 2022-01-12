@@ -4,7 +4,7 @@
 
     <groupId>com.hippout</groupId>
     <artifactId>HippOutLocalizationLib</artifactId>
-    <version>0.14.1-SNAPSHOT-1.16.5</version>
+    <version>0.15.0-SNAPSHOT-1.16.5</version>
     <packaging>jar</packaging>
 
     <name>HippOutLocalizationLib</name>
@@ -12,12 +12,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <java.version>${maven.compiler.source}</java.version>
+
         <project.build.javadocOutputDir>${project.build.directory}/javadoc-jars</project.build.javadocOutputDir>
+        <project.build.javadocPluginVersion>3.2.0</project.build.javadocPluginVersion>
+
         <pluginyml.classpath>hippoutlocalizationlib</pluginyml.classpath>
         <pluginyml.apiVersion>1.16</pluginyml.apiVersion>
-        <project.build.javadocPluginVersion>3.2.0</project.build.javadocPluginVersion>
     </properties>
 
     <repositories>

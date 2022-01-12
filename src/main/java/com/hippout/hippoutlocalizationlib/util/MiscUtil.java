@@ -1,5 +1,8 @@
 package com.hippout.hippoutlocalizationlib.util;
 
+import org.bukkit.*;
+import org.bukkit.entity.*;
+
 import javax.annotation.*;
 import java.util.*;
 
@@ -39,5 +42,53 @@ public class MiscUtil {
         builder.insert(8, "-");
 
         return builder.toString();
+    }
+
+    /**
+     * Returns a Collection containing all Online Players whose UUIDs are contained within the UUID Collection.
+     *
+     * @param uuidCollection UUIDs to check.
+     * @return The new Collection of Players.
+     * @throws NullPointerException if uuidCollection is null.
+     * @throws NullPointerException if any individual UUID is null.
+     * @since 1.0.0
+     */
+    public static Collection<Player> getOnlinePlayers(@Nonnull Collection<UUID> uuidCollection)
+    {
+        Objects.requireNonNull(uuidCollection, "UUID Collection cannot be null.");
+        final List<Player> playerList = new ArrayList<>();
+
+        for (UUID id : uuidCollection) {
+            Objects.requireNonNull(id, "Individual UUIDs cannot be null.");
+
+            final Player p = Bukkit.getPlayer(id);
+
+            if (p != null)
+                playerList.add(p);
+        }
+
+        return playerList;
+    }
+
+    /**
+     * Returns a Collection containing the UUIDs of all Players inside playerCollection.
+     *
+     * @param playerCollection UUIDs to check.
+     * @return The new Collection of UUIDs.
+     * @throws NullPointerException if playerCollection is null.
+     * @throws NullPointerException if any individual Player is null.
+     * @since 1.0.0
+     */
+    public static Collection<UUID> getPlayerIds(@Nonnull Collection<? extends Player> playerCollection)
+    {
+        Objects.requireNonNull(playerCollection, "Player Collection cannot be null.");
+        final List<UUID> idList = new ArrayList<>();
+
+        for (Player p : playerCollection) {
+            Objects.requireNonNull(p, "Player cannot be null.");
+            idList.add(p.getUniqueId());
+        }
+
+        return idList;
     }
 }

@@ -12,6 +12,8 @@ import java.util.*;
  * @since 1.0.0
  */
 public class KeyRegistry {
+    public final NamespacedKey TEST_MESSAGE;
+
     public final NamespacedKey INVALID_FORMAT_LOCALE, COMMAND_DISABLED, PLAYER_NOT_FOUND;
 
     public final NamespacedKey TARGETARGS_INVALID_TYPE, TARGETARGS_INVALID_FORMAT;
@@ -37,6 +39,8 @@ public class KeyRegistry {
     public KeyRegistry()
     {
         this.plugin = HippOutLocalizationLib.getPlugin();
+
+        TEST_MESSAGE = getKey("test_message");
 
         INVALID_FORMAT_LOCALE = getKey("invalid_format_locale");
         COMMAND_DISABLED = getKey("command_disabled");

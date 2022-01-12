@@ -64,12 +64,12 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
                              @Nonnull String[] args)
     {
         if (!sender.hasPermission(manageAll) && !sender.hasPermission(manageSelf)) {
-            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            Macros.sendLocalized(PERMISSION_ERROR, sender);
             return true;
         }
 
         if (args.length != 2) {
-            Macros.sendLocalizedMessage(USAGE, sender);
+            Macros.sendLocalized(USAGE, sender);
             return true;
         }
 
@@ -91,14 +91,14 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
                 final Player p = (Player) sender;
 
                 if (!p.getUniqueId().equals(id)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                     return true;
                 } else if (!sender.hasPermission(manageSelf)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_SELF, sender);
                     return true;
                 }
             } else {
-                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                 return true;
             }
         }
@@ -112,7 +112,7 @@ public class CommandSetLocaleOverride implements CommandExecutor, TabCompleter {
         }
 
         HippOutLocalizationLib.getPlugin().getLocaleCache().setLocaleOverride(id, localeArg);
-        Macros.sendLocalizedMessage(SUCCESS, sender, targetArg.substring(2), localeArg);
+        Macros.sendLocalized(SUCCESS, sender, targetArg.substring(2), localeArg);
         return true;
     }
 

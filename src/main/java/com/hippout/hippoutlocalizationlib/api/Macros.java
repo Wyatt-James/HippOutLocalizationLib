@@ -18,6 +18,7 @@ import java.util.*;
  * @author Wyatt Kalmer
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public class Macros {
     private static final String BROADCAST_HEADER = ChatColor.GREEN + "[Broadcast] " + ChatColor.RESET;
 
@@ -32,10 +33,9 @@ public class Macros {
      * @api.Note The String formatting arguments are only formatted once per Locale to save on processing time.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
-                                                 @Nonnull Collection<? extends CommandSender> recipients,
-                                                 @Nonnull Object... formatArgs)
+    public static void broadcastLocalized(@Nonnull NamespacedKey messageKey,
+                                          @Nonnull Collection<? extends CommandSender> recipients,
+                                          @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Message Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
@@ -61,12 +61,37 @@ public class Macros {
                 message = messageMap.get(locale);
             else {
                 message = StringUtils.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(), formatArgs);
-
                 messageMap.put(locale, message);
             }
 
             sender.sendMessage(message);
         }
+    }
+
+    /**
+     * Broadcasts a Localized Message to the given Collection of Player UUIDs and the Console.
+     *
+     * @param messageKey   Message Key to send.
+     * @param recipientIds Player UUIDs to broadcast to. Offline Players will be ignored.
+     * @param formatArgs   String Formatting arguments.
+     * @throws NullPointerException     if MessageKey, recipientIds, or formatArgs is null.
+     * @throws IllegalArgumentException if recipientIds is empty.
+     * @api.Note The String formatting arguments are only formatted once per Locale to save on processing time.
+     * @since 1.0.0
+     */
+    public static void broadcastLocalizedId(@Nonnull NamespacedKey messageKey,
+                                            @Nonnull Collection<UUID> recipientIds,
+                                            @Nonnull Object... formatArgs)
+    {
+        Objects.requireNonNull(messageKey, "Message Key cannot be null.");
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+        Objects.requireNonNull(recipientIds, "Recipient Collection cannot be null.");
+        if (recipientIds.isEmpty()) throw new IllegalArgumentException("Recipient Collection cannot be empty.");
+
+        final Collection<Player> onlinePlayers = MiscUtil.getOnlinePlayers(recipientIds);
+
+        if (!onlinePlayers.isEmpty())
+            broadcastLocalized(messageKey, onlinePlayers, formatArgs);
     }
 
     /**
@@ -79,49 +104,14 @@ public class Macros {
      * @api.Note Ends silently if no Players are online.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
+    public static void broadcastLocalized(@Nonnull NamespacedKey messageKey, @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Message Key cannot be null.");
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
 
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         if (onlinePlayers.size() > 0)
-            broadcastLocalizedMessage(messageKey, onlinePlayers, formatArgs);
-    }
-
-    /**
-     * Broadcasts a Localized Message to the given Collection of Players and the Console.
-     *
-     * @param messageKey Message Key to send.
-     * @param recipients CommandSenders to broadcast to. Note that they may not have actually sent the Command.
-     * @throws NullPointerException     if MessageKey or Players is null.
-     * @throws IllegalArgumentException if Recipients is empty.
-     * @since 1.0.0
-     */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey,
-                                                 @Nonnull Collection<? extends CommandSender> recipients)
-    {
-        broadcastLocalizedMessage(messageKey, recipients, new Object[0]);
-    }
-
-    /**
-     * Broadcasts a Localized Message to all currently online Players and the Console.
-     *
-     * @param messageKey Message Key to send.
-     * @throws NullPointerException if MessageKey is null.
-     * @api.Note Ends silently if no Players are online.
-     * @since 1.0.0
-     */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedMessage(@Nonnull NamespacedKey messageKey)
-    {
-        Objects.requireNonNull(messageKey, "Message Key cannot be null.");
-
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        if (onlinePlayers.size() > 0)
-            broadcastLocalizedMessage(messageKey, onlinePlayers);
+            broadcastLocalized(messageKey, onlinePlayers, formatArgs);
     }
 
     /**
@@ -133,9 +123,8 @@ public class Macros {
      * @throws NullPointerException if messageKey, commandSender, or formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
-                                            @Nonnull Object... formatArgs)
+    public static void sendLocalized(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender,
+                                     @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
@@ -151,17 +140,31 @@ public class Macros {
     }
 
     /**
-     * Sends a localized Message to a given Player.
+     * Sends a localized Message to a given Player UUID. Ignores Offline Players.
      *
-     * @param messageKey    Message Key to send.
-     * @param commandSender CommandSender to send the Message to.
-     * @throws NullPointerException if messageKey or commandSender is null.
+     * @param messageKey Message Key to send.
+     * @param id         Player UUID to send the Message to.
+     * @param formatArgs String formatting arguments.
+     * @throws NullPointerException if messageKey, id, or formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void sendLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
+    public static void sendLocalized(@Nonnull NamespacedKey messageKey, @Nonnull UUID id,
+                                     @Nonnull Object... formatArgs)
     {
-        sendLocalizedMessage(messageKey, commandSender, new Object[0]);
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(id, "UUID cannot be null.");
+        Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
+
+        final Player p = Bukkit.getPlayer(id);
+        if (p == null) return;
+
+        final String locale = getLocale(id);
+        final LanguageHandler languageHandler = HippOutLocalizationLib.getPlugin().getLanguageHandler();
+
+        final String message = StringUtils.format(languageHandler.getLocalizedMessage(locale, messageKey).getMessage(),
+                formatArgs);
+
+        p.sendMessage(message);
     }
 
     /**
@@ -179,14 +182,13 @@ public class Macros {
      * @throws NullPointerException if formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
     public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
                                                int fadeIn, int stay, int fadeOut,
                                                @Nonnull Collection<? extends Player> recipients,
                                                @Nonnull Object... formatArgs)
     {
         Objects.requireNonNull(recipients, "Recipients cannot be null.");
-        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipients cannot be empty.");
+        if (recipients.isEmpty()) throw new IllegalArgumentException("Recipient Collection cannot be empty.");
 
         Objects.requireNonNull(formatArgs, "Format Args cannot be null.");
 
@@ -238,7 +240,6 @@ public class Macros {
      * @throws NullPointerException if formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
     public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
                                                int fadeIn, int stay, int fadeOut, @Nonnull Object... formatArgs)
     {
@@ -246,55 +247,41 @@ public class Macros {
             throw new IllegalArgumentException("At least one key cannot be null.");
 
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        if (onlinePlayers.size() > 0)
+
+        if (!onlinePlayers.isEmpty())
             broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, onlinePlayers, formatArgs);
     }
 
     /**
-     * Broadcasts a localized unformatted title to the given Collection of Players.
+     * Broadcasts a localized Title to the given Collection of Player UUIDs. Ignores Offline Players.
      *
-     * @param titleKey    NamespacedKey for the title. If null, sends no title.
-     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
-     * @param fadeIn      time in ticks for titles to fade in.
-     * @param stay        time in ticks for titles to stay.
-     * @param fadeOut     time in ticks for titles to fade out.
-     * @param recipients  Collection of Players to send the Title to.
+     * @param titleKey     NamespacedKey for the title. If null, sends no title.
+     * @param subtitleKey  NamespacedKey for the subtitle. If null, sends no subtitle.
+     * @param fadeIn       time in ticks for titles to fade in.
+     * @param stay         time in ticks for titles to stay.
+     * @param fadeOut      time in ticks for titles to fade out.
+     * @param recipientIds Collection of UUIDs to send the Title to.
+     * @param formatArgs   String formatting arguments.
      * @throws NullPointerException if both titleKey and subtitleKey are null
-     * @throws NullPointerException if recipients is null.
+     * @throws NullPointerException if recipientIds is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
-                                               int fadeIn, int stay, int fadeOut,
-                                               @Nonnull Collection<? extends Player> recipients)
+    public static void broadcastLocalizedTitleId(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
+                                                 int fadeIn, int stay, int fadeOut,
+                                                 @Nonnull Collection<UUID> recipientIds,
+                                                 @Nonnull Object... formatArgs)
     {
+        Objects.requireNonNull(recipientIds, "Recipient ID Collection cannot be null.");
+
         if (titleKey == null && subtitleKey == null)
             throw new IllegalArgumentException("At least one key cannot be null.");
 
-        broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, recipients, new Object[0]);
-    }
+        if (recipientIds.isEmpty()) return;
 
-    /**
-     * Broadcasts a localized unformatted title to all online Players.
-     *
-     * @param titleKey    NamespacedKey for the title. If null, sends no title.
-     * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
-     * @param fadeIn      time in ticks for titles to fade in.
-     * @param stay        time in ticks for titles to stay.
-     * @param fadeOut     time in ticks for titles to fade out.
-     * @throws NullPointerException if both titleKey and subtitleKey are null
-     * @since 1.0.0
-     */
-    @SuppressWarnings("unused")
-    public static void broadcastLocalizedTitle(@Nullable NamespacedKey titleKey, @Nullable NamespacedKey subtitleKey,
-                                               int fadeIn, int stay, int fadeOut)
-    {
-        if (titleKey == null && subtitleKey == null)
-            throw new IllegalArgumentException("At least one key cannot be null.");
+        final Collection<Player> onlinePlayers = MiscUtil.getOnlinePlayers(recipientIds);
 
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        if (onlinePlayers.size() > 0)
-            broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, onlinePlayers);
+        if (!onlinePlayers.isEmpty())
+            broadcastLocalizedTitle(titleKey, subtitleKey, fadeIn, stay, fadeOut, onlinePlayers, formatArgs);
     }
 
     /**
@@ -307,16 +294,17 @@ public class Macros {
      * @param stay        time in ticks for titles to stay.
      * @param fadeOut     time in ticks for titles to fade out.
      * @param formatArgs  String formatting arguments.
+     * @throws NullPointerException if Player is null.
      * @throws NullPointerException if both titleKey and subtitleKey are null
      * @throws NullPointerException if formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
     public static void sendLocalizedTitle(@Nonnull Player player, @Nullable NamespacedKey titleKey,
                                           @Nullable NamespacedKey subtitleKey, int fadeIn, int stay, int fadeOut,
                                           @Nonnull Object... formatArgs)
     {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "Player cannot be null.");
+
         if (titleKey == null && subtitleKey == null)
             throw new IllegalArgumentException("At least one key cannot be null.");
 
@@ -340,24 +328,31 @@ public class Macros {
         player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
-
     /**
-     * Sends a localized Title to the given Player.
+     * Sends a localized Title to the given Player UUID. Ignores Offline Players.
      *
-     * @param player      Player to send to.
+     * @param id          Player UUID to send to.
      * @param titleKey    NamespacedKey for the title. If null, sends no title.
      * @param subtitleKey NamespacedKey for the subtitle. If null, sends no subtitle.
      * @param fadeIn      time in ticks for titles to fade in.
      * @param stay        time in ticks for titles to stay.
      * @param fadeOut     time in ticks for titles to fade out.
+     * @param formatArgs  String formatting arguments.
+     * @throws NullPointerException if id is null.
      * @throws NullPointerException if both titleKey and subtitleKey are null
+     * @throws NullPointerException if formatArgs is null.
      * @since 1.0.0
      */
-    @SuppressWarnings("unused")
-    public static void sendLocalizedTitle(@Nonnull Player player, @Nullable NamespacedKey titleKey,
-                                          @Nullable NamespacedKey subtitleKey, int fadeIn, int stay, int fadeOut)
+    public static void sendLocalizedTitle(@Nonnull UUID id, @Nullable NamespacedKey titleKey,
+                                          @Nullable NamespacedKey subtitleKey, int fadeIn, int stay, int fadeOut,
+                                          @Nonnull Object... formatArgs)
     {
-        sendLocalizedTitle(player, titleKey, subtitleKey, fadeIn, stay, fadeOut, new Object[0]);
+        Objects.requireNonNull(id, "UUID cannot be null.");
+
+        final Player p = Bukkit.getPlayer(id);
+
+        if (p != null)
+            sendLocalizedTitle(p, titleKey, subtitleKey, fadeIn, stay, fadeOut, formatArgs);
     }
 
     /**
@@ -370,13 +365,30 @@ public class Macros {
      * @since 1.0.0
      */
     @Nonnull
-    @SuppressWarnings("unused")
     public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
         Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
 
         return getLocalizedMessage(messageKey, getLocale(commandSender));
+    }
+
+    /**
+     * Returns a localized Message with the given UUID's Locale.
+     *
+     * @param messageKey Message Key to retrieve.
+     * @param id         UUID to get the Locale of.
+     * @return A Localized Message String with the given UUID's Locale.
+     * @throws NullPointerException if MessageKey or id is null.
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull UUID id)
+    {
+        Objects.requireNonNull(messageKey, "Key cannot be null.");
+        Objects.requireNonNull(id, "UUID cannot be null.");
+
+        return getLocalizedMessage(messageKey, getLocale(id));
     }
 
     /**
@@ -389,7 +401,6 @@ public class Macros {
      * @since 1.0.0
      */
     @Nonnull
-    @SuppressWarnings("unused")
     public static String getLocalizedMessage(@Nonnull NamespacedKey messageKey, @Nonnull String locale)
     {
         Objects.requireNonNull(messageKey, "Key cannot be null.");
@@ -413,7 +424,6 @@ public class Macros {
      * @since 1.0.0
      */
     @Nonnull
-    @SuppressWarnings("unused")
     public static String getLocale(@Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(commandSender, "Command Sender cannot be null.");
@@ -440,6 +450,22 @@ public class Macros {
     }
 
     /**
+     * Fetches the Locale of the given UUID.
+     *
+     * @param id UUID to get the Locale of.
+     * @return The Locale. Might be a default.
+     * @throws NullPointerException if id is null.
+     * @throws NullPointerException if UUID is not present in the LocaleCache.
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static String getLocale(@Nonnull UUID id)
+    {
+        Objects.requireNonNull(id, "UUID cannot be null.");
+        return HippOutLocalizationLib.getPlugin().getLocaleCache().getLocale(id);
+    }
+
+    /**
      * Fetches the Locale of the given CommandSender, excluding any Overrides. For ProxiedCommandSenders, recursively
      * fetches caller.
      *
@@ -451,7 +477,6 @@ public class Macros {
      * @since 1.0.0
      */
     @Nonnull
-    @SuppressWarnings("unused")
     public static String getLocaleNoOverride(@Nonnull CommandSender commandSender)
     {
         Objects.requireNonNull(commandSender, "Command sender cannot be null.");
@@ -475,5 +500,21 @@ public class Macros {
             locale = plugin.getConfiguration().DEFAULT_LOCALE;
 
         return locale;
+    }
+
+    /**
+     * Fetches the Locale of the given UUID, excluding any Overrides.
+     *
+     * @param id UUID to get the Locale of.
+     * @return The Locale. Might be a default.
+     * @throws NullPointerException if UUID is null.
+     * @throws NullPointerException if UUID is not present in the LocaleCache.
+     * @since 1.0.0
+     */
+    @Nonnull
+    public static String getLocaleNoOverride(@Nonnull UUID id)
+    {
+        Objects.requireNonNull(id, "UUID cannot be null.");
+        return HippOutLocalizationLib.getPlugin().getLocaleCache().getLocaleNoOverride(id);
     }
 }

@@ -61,12 +61,12 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
                              @Nonnull String[] args)
     {
         if (!sender.hasPermission(manageAll) && !sender.hasPermission(manageSelf)) {
-            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            Macros.sendLocalized(PERMISSION_ERROR, sender);
             return true;
         }
 
         if (args.length != 1) {
-            Macros.sendLocalizedMessage(USAGE, sender);
+            Macros.sendLocalized(USAGE, sender);
             return true;
         }
 
@@ -87,26 +87,26 @@ public class CommandRemoveLocaleOverride implements CommandExecutor, TabComplete
                 final Player p = (Player) sender;
 
                 if (!p.getUniqueId().equals(id)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                     return true;
                 } else if (!sender.hasPermission(manageSelf)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_SELF, sender);
                     return true;
                 }
             } else {
-                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                 return true;
             }
         }
 
         final LocaleCache localeCache = HippOutLocalizationLib.getPlugin().getLocaleCache();
         if (!localeCache.hasLocaleOverride(id)) {
-            Macros.sendLocalizedMessage(ERROR_NO_OVERRIDE, sender, targetArg.substring(2));
+            Macros.sendLocalized(ERROR_NO_OVERRIDE, sender, targetArg.substring(2));
             return true;
         }
 
         localeCache.removeLocaleOverride(id);
-        Macros.sendLocalizedMessage(SUCCESS, sender, targetArg.substring(2));
+        Macros.sendLocalized(SUCCESS, sender, targetArg.substring(2));
         return true;
     }
 

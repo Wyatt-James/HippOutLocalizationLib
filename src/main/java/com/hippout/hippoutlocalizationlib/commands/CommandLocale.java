@@ -61,12 +61,12 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
                              @Nonnull String[] args)
     {
         if (!sender.hasPermission(checkAll) && !sender.hasPermission(checkSelf)) {
-            Macros.sendLocalizedMessage(PERMISSION_ERROR, sender);
+            Macros.sendLocalized(PERMISSION_ERROR, sender);
             return true;
         }
 
         if (args.length != 1) {
-            Macros.sendLocalizedMessage(USAGE, sender);
+            Macros.sendLocalized(USAGE, sender);
             return true;
         }
 
@@ -87,14 +87,14 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
                 final Player p = (Player) sender;
 
                 if (!p.getUniqueId().equals(id)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                     return true;
                 } else if (!sender.hasPermission(checkSelf)) {
-                    Macros.sendLocalizedMessage(PERMISSION_ERROR_SELF, sender);
+                    Macros.sendLocalized(PERMISSION_ERROR_SELF, sender);
                     return true;
                 }
             } else {
-                Macros.sendLocalizedMessage(PERMISSION_ERROR_ALL, sender);
+                Macros.sendLocalized(PERMISSION_ERROR_ALL, sender);
                 return true;
             }
         }
@@ -105,9 +105,9 @@ public class CommandLocale implements CommandExecutor, TabCompleter {
         final String locale = localeCache.getLocale(id);
 
         if (localeCache.hasLocaleOverride(id))
-            Macros.sendLocalizedMessage(SUCCESS_OVERRIDE, sender, targetArgShort, locale);
+            Macros.sendLocalized(SUCCESS_OVERRIDE, sender, targetArgShort, locale);
         else
-            Macros.sendLocalizedMessage(SUCCESS, sender, targetArgShort, locale);
+            Macros.sendLocalized(SUCCESS, sender, targetArgShort, locale);
 
         return true;
     }

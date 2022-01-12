@@ -27,7 +27,7 @@ public class DisabledCommand implements CommandExecutor {
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label,
                              @Nonnull String[] args)
     {
-        Macros.sendLocalizedMessage(HippOutLocalizationLib.getKeyRegistry().COMMAND_DISABLED, sender);
+        Macros.sendLocalized(HippOutLocalizationLib.getKeyRegistry().COMMAND_DISABLED, sender);
         return true;
     }
 }

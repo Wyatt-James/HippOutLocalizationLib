@@ -75,4 +75,28 @@ public class EventListener implements Listener {
             plugin.getLogger().info(String.format(LOG_PLAYER_LOCALE_REMOVED, event.getPlayer().getName()));
         }
     }
+
+//    @EventHandler
+//    public void apiTest(PlayerChatEvent event)
+//    {
+//        final NamespacedKey msg = HippOutLocalizationLib.getKeyRegistry().TEST_MESSAGE;
+//
+//        final Player p = event.getPlayer();
+//        final UUID pid = event.getPlayer().getUniqueId();
+//
+//        final UUID badId = UUID.randomUUID();
+//        final Collection<UUID> badIds = ImmutableList.of(badId);
+//
+//        final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+//        final Collection<UUID> ids = MiscUtil.getPlayerIds(players);
+//
+//        Macros.broadcastLocalized(msg, "Broadcast All");
+//        Macros.broadcastLocalized(msg, players, "Broadcast Players");
+//        Macros.broadcastLocalizedId(msg, ids, "Broadcast UUIDs");
+//        Macros.broadcastLocalizedId(msg, badIds, "Broadcast UUIDs bad");
+//
+//        Macros.sendLocalized(msg, p, "Send Player");
+//        Macros.sendLocalized(msg, pid, "Send UUID");
+//        Macros.sendLocalized(msg, badId, "Send UUID BAD");
+//    }
 }

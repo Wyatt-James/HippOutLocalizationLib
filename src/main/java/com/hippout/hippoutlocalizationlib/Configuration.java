@@ -46,6 +46,7 @@ public class Configuration {
 
     private final List<String> LANGUAGE_FILE_DEFINITIONS;
 
+    public final boolean SEND_BROADCASTS_TO_CONSOLE;
     public final boolean ENABLE_LOCALE_OVERRIDES;
     public final boolean SAVE_AND_LOAD_LOCALE_OVERRIDES;
 
@@ -92,6 +93,7 @@ public class Configuration {
         LANGUAGE_FILE_DEFINITIONS = Objects.requireNonNull(rootConfig.getStringList("language_files"), "Language File" +
                 " Definitons cannot be null.");
 
+        SEND_BROADCASTS_TO_CONSOLE = rootConfig.getBoolean("send_broadcasts_to_console", true);
         ENABLE_LOCALE_OVERRIDES = rootConfig.getBoolean("enable_locale_overrides");
         SAVE_AND_LOAD_LOCALE_OVERRIDES = rootConfig.getBoolean("save_and_load_locale_overrides_to_file");
 

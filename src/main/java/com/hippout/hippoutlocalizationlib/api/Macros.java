@@ -51,7 +51,8 @@ public class Macros {
         String consoleMessage = String.format(consoleMessageWrapper.getMessage(), formatArgs);
         messageMap.put(consoleMessageWrapper.getLocale(), consoleMessage);
 
-        HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessage);
+        if (HippOutLocalizationLib.getPlugin().getConfiguration().SEND_BROADCASTS_TO_CONSOLE)
+            HippOutLocalizationLib.getPlugin().getLogger().info(BROADCAST_HEADER + consoleMessage);
 
         for (CommandSender sender : recipients) {
             final String locale = getLocale(sender);

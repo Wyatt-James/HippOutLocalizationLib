@@ -3,6 +3,9 @@ config_version: "1.0.0"
 # List of language files to load from the languages configuration sub-folder.
 language_files: [ en.yml ]
 
+#Whether or not to additionally send all broadcasts to console
+send_broadcasts_to_console: true
+
 # Whether or not to allow Locale Overrides to be used.
 enable_locale_overrides: true
 

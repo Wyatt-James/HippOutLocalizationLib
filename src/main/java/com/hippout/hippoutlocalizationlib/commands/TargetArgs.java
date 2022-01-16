@@ -44,7 +44,7 @@ public class TargetArgs {
      * @throws IllegalArgumentException if the parsed Player could not be found.
      * @since 1.0.0
      */
-    static UUID parseTargetArg(@Nonnull String targetArg, @Nonnull String errorMessageLocale)
+    public static UUID parseTargetArg(@Nonnull String targetArg, @Nonnull String errorMessageLocale)
     {
         Objects.requireNonNull(errorMessageLocale, "Error Message Locale cannot be null.");
         if (errorMessageLocale.isEmpty()) throw new IllegalArgumentException("Error Message Locale cannot be empty.");
@@ -111,7 +111,7 @@ public class TargetArgs {
      * @api.Note Does not parse for valid UUIDs.
      * @since 1.0.0
      */
-    static List<String> tabCompleteTargetArg(@Nonnull String targetArgString)
+    public static List<String> tabCompleteTargetArg(@Nonnull String targetArgString)
     {
         final List<String> suggestions = new LinkedList<>();
 
